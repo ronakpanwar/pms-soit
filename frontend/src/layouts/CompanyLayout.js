@@ -1,0 +1,87 @@
+import React from "react";
+import AddStudent from "../views/AddStudent.js";
+import AddCompany from "views/AddCompany.js";
+// javascript plugin used to create scrollbars on windows
+import PerfectScrollbar from "perfect-scrollbar";
+import { Route, Routes, useLocation } from "react-router-dom";
+import CreateJob from "views/CreateJob.js";
+import Applications from "views/Applications.js";
+import SelectedStudent from "views/SelectedStudent.js";
+import UpdatePassword from "views/UpdatePassword.js";
+import DemoNavbar from "components/Navbars/DemoNavbar.js";
+
+// import DemoNavbar from "components/Navbars/DemoNavbar.js";
+// import Footer from "components/Footer/Footer.js";
+import Sidebar from "../components/Sidebar/Sidebar.js";
+// import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
+
+import croutes from "../croutes.js";
+import CompanyProfile from "views/CompanyProfile.js";
+
+var ps;
+
+function Dashboard(props) {
+  const [backgroundColor, setBackgroundColor] = React.useState("black");
+  const [activeColor, setActiveColor] = React.useState("info");
+  const mainPanel = React.useRef();
+  const location = useLocation();
+  const state = "/company-layout/company-profile";
+  const Name = "Company";
+  React.useEffect(() => {
+    if (navigator.platform.indexOf("Win") > -1) {
+      ps = new PerfectScrollbar(mainPanel.current);
+      document.body.classList.toggle("perfect-scrollbar-on");
+    }
+    return function cleanup() {
+      if (navigator.platform.indexOf("Win") > -1) {
+        ps.destroy();
+        document.body.classList.toggle("perfect-scrollbar-on");
+      }
+    };
+  });
+  React.useEffect(() => {
+    mainPanel.current.scrollTop = 0;
+    document.scrollingElement.scrollTop = 0;
+  }, [location]);
+  const handleActiveClick = (color) => {
+    setActiveColor(color);
+  };
+  const handleBgClick = (color) => {
+    setBackgroundColor(color);
+  };
+
+  return (
+    
+    <div className="wrapper ">
+      <DemoNavbar/>
+      <Sidebar
+        {...props}
+        state = {state}
+        Name = {Name}
+        routes={croutes}
+        bgColor={backgroundColor}
+        activeColor={activeColor}
+        handleLogOut = {props.handleLogged}
+      />
+      <div className="main-panel" ref={mainPanel}>
+        {/* <DemoNavbar {...props} /> */}
+        <Routes>
+        
+        <Route path="/company-profile" element={<CompanyProfile  data = {props.data} />}/>
+        <Route path="/create-job" element={<CreateJob/>}/>
+        <Route path="/application" element={<Applications/>}/>
+        <Route path="/selected-student" element={<SelectedStudent/>}/>
+        <Route path="/updatepassword" element={<UpdatePassword/>}/>
+        
+        </Routes>
+        {/* <Footer fluid /> */}
+      </div>
+      {/* <FixedPlugin
+        handleActiveClick={handleActiveClick}
+        handleBgClick={handleBgClick}
+      /> */}
+    </div>
+  );
+}
+
+export default Dashboard;
