@@ -1,7 +1,31 @@
-import React from 'react'
-import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button } from "reactstrap";
+import axios from 'axios';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
+import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button, Badge } from "reactstrap";
+import { applicationApi } from '../utils/utils';
+import { setAllSelected } from '../redux/userSlice';
 
 const SelectedStudent = () => {
+
+   const {allSelected }  = useSelector(store=>store.user);
+   const dispatch = useDispatch()
+
+   useEffect(()=>{
+    const getAll = async()=>{
+      try {
+        const res = await axios.get(`${applicationApi}/all`, {
+          withCredentials:true
+        })
+        if(res.data.success){
+          dispatch(setAllSelected(res.data.applicants))
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getAll()
+   }, [dispatch])
+
   return (
        
     <div className="content">
@@ -27,20 +51,33 @@ const SelectedStudent = () => {
                   <th>Name</th>
                   <th>Enroolment No.</th>
                   <th>Branch</th>
+                  <th>Company Name</th>
+                  <th>title</th>
+                  <th>postion</th>
                   
-                  <th className="text-right">Action</th>
+                  <th className="text-right">status</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Dakota Rice</td>
-                  <td>0002cb211043</td>
-                  <td>csbs</td>
-                  
-                  <td className="text-right">
-                   <button className='rounded '><a href="#" className='bold'>view</a></button>
+                {
+                  allSelected?.map((all , key)=>{
+                    return (
+                      <tr key={key}>
+                  <td>{all?.applicant?.fullname}</td>
+                  <td>{all?.applicant?.profile?.enrolmentNo}</td>
+                  <td>{all?.applicant?.profile?.branch}</td>
+                  <td>{all?.job?.company?.name}</td>
+                  <td>{all?.job?.title}</td>
+                  <td>{all?.job?.position}</td>
+                  <td>
+                    <h6><Badge color='success'>
+                      {all?.status}
+                    </Badge></h6>
                   </td>
                 </tr>
+                    )
+                  })
+                }
                
               </tbody>
             </Table>

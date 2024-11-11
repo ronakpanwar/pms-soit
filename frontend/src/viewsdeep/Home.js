@@ -1,16 +1,15 @@
 import React from 'react'
 import Login from './Login'
 
+import HomeNavbar from './HomeNavbar'
+import HomeContent from './HomeContent'
+
 const Home = (props) => {
   return (
     <>
-      <nav class="navbar bg-body-tertiary bg-dark">
-        <div class="container-fluid">
-          <a class="navbar-brand" href="#">Navbar</a>
-        </div>
-      </nav>
+    <HomeNavbar/>
       <div className="container" >
-      <Login handleLogged = {props.handleLogged} handleData ={props.handleData} />
+       <HomeContent/>
       </div>
     </>
   )

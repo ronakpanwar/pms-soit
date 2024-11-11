@@ -15,11 +15,13 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useSelector } from "react-redux";
 
 function CompanyProfile(props) {
 
   const state = useContext(NoteContext)
 
+  const {company}  = useSelector(store=>store.company)
   
 
   return (
@@ -38,13 +40,13 @@ function CompanyProfile(props) {
                     <Col className="pr-1" md="6">
                       <FormGroup>
                         <label>Company Name</label>
-                        <p>{state.cData.companyname}</p>
+                        <p>{company?.name}</p>
                       </FormGroup>
                     </Col>
                     <Col className="px-1" md="6">
                       <FormGroup>
                         <label>Website</label>
-                        <p>{state.cData.website}</p>
+                        <p>{company?.website}</p>
                       </FormGroup>
                     </Col>
                   
@@ -54,29 +56,29 @@ function CompanyProfile(props) {
                     <Col md="12" className="m-4">
                       <FormGroup>
                         <label>Address</label>
-                        <p>{state.cData.address}</p>
+                        <p>{company?.address}</p>
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row className="m-2">
-                    <Col className="pr-1 " md="4">
+                    <Col className="pr-1 " md="6">
                       <FormGroup>
-                        <label>phone no.</label>
-                        <p>{state.cData.phone}</p>
+                        <label>About</label>
+                        <p>{company?.about}</p>
                       </FormGroup>
                     </Col>
-                    <Col className="px-1 " md="4">
+                    {/* <Col className="px-1 " md="4">
                       <FormGroup>
                         <label>password</label>
                         <p>{state.cData.password}</p>
                       </FormGroup>
-                    </Col>
+                    </Col> */}
                     <Col className="pl-1" md="4">
                       <FormGroup>
                         <label htmlFor="exampleInputEmail1">
                           Email address
                         </label>
-                        <p>{state.cData.email}</p>
+                        <p>{company?.email}</p>
                       </FormGroup>
                     </Col>
                   </Row>

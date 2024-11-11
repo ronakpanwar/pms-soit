@@ -1,8 +1,13 @@
 import React from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button } from "reactstrap";
 
 function Applications() {
+   const navigate = useNavigate()
+   const {companyJobs} =  useSelector(store=>store.company)
+  
   return (
     
       <>
@@ -13,33 +18,41 @@ function Applications() {
             <Col md="12">
               <Card>
                 <CardHeader>
-                  <CardTitle tag="h4">Students</CardTitle>
+                  <CardTitle tag="h4">Opnings</CardTitle>
                 </CardHeader>
                 <CardBody>
                   <Table responsive>
                     <thead className="text-primary">
                       <tr>
-                        <th>Name</th>
-                        <th>Gender</th>
-                        <th>Enrollment no.</th>
-                        <th>Mobile No.</th>
-                        <th>Branch</th>
+                        <th>Title</th>
+                        <th>Position</th>
+                        <th>Pakage</th>
+                        <th>Cgpa</th>
                     
-                        <th className="text-right">Action</th>
+                        <th className="text-end">Applications</th>
                       </tr>
                     </thead>
                     <tbody>
-                      <tr>
-                        <td>Dakota Rice</td>
-                        <td>male</td>
-                        <td>0002cb211043</td>
-                        <td></td>
-                        <td>Csbs</td>
-                        <td className="text-right">
-                          <button className="mx-1 border-success rounded">Select</button>
-                          <button className="rounded"><a href="#">View</a></button>
+                    { companyJobs?.map((job , key)=>{
+                      return (
+                      <tr key={key}>
+                        <td>{job?.title}</td>
+                        <td>{job?.position}</td>
+                        <td>{job?.salary}</td>
+               
+                        <td>{job?.cgpa}</td>
+                        <td className="text-end">
+                          
+                          <Button className="rounded px-2" onClick={()=>{
+                            navigate(`/company-layout/applicant-detail/${job?._id}`)
+                          }}><a className="text-decoration-none text-white" href="#"><span className="px-1 text-primary fs-6">{job?.applications?.length}</span> Applicant</a></Button>
                         </td>
                       </tr>
+                      )
+                    })
+                     
+                    }
+                      
                      
                     </tbody>
                   </Table>

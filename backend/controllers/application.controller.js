@@ -65,7 +65,6 @@ const getAllAppliedJob = async(req,res)=>{
                 success:false
             })
         }
-
         return res.status(200).json({
             applieds,
             success:true
@@ -78,7 +77,7 @@ const getAllAppliedJob = async(req,res)=>{
 
 const getApplications = async(req,res)=>{
     try {
-
+        
         const jobId = req.params.id;
         const applications = await Job.findById(jobId).populate({
             path:'applications',
@@ -144,9 +143,41 @@ const updateStatus = async(req,res)=>{
     }
 }
 
+const getAllApplication = async(req,res)=>{
+    try {
+        const applicants = await Application.find({ status: 'accepted' })
+        .populate({
+            path: 'applicant', // Populate student details
+            
+        })
+        .populate({
+            path: 'job', // Populate job details
+            populate: { 
+                path: 'company', // Nested populate to get company details through job
+                select: 'name location' // Select specific fields if needed
+            }
+        });
+        if(applicants.length === 0){
+          return  res.status(400).json({
+                success:false,
+                message:"there no appplicants.."
+            })
+        }
+        
+        return res.status(200).json({
+            success:true,
+            applicants
+        })
+    
+    } catch (error) {
+        console.log(error);
+    }
+}
+
 module.exports = {
     applyJob,
     getAllAppliedJob,
     getApplications,
-    updateStatus
+    updateStatus,
+    getAllApplication
 }

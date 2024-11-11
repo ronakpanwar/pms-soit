@@ -1,11 +1,13 @@
 const express = require('express');
 const { Authentication, isAutherized } = require('../middleweres/isAutherized');
-const { createCompany,  loginCompany, logOutCompany, updateCompany, deleteCompany } = require('../controllers/company.controller');
+const { createCompany,  loginCompany, logOutCompany, updateCompany, deleteCompany, getAllCompnys } = require('../controllers/company.controller');
 
 
 const router = express.Router();
 
+
 router.post('/create' , Authentication , isAutherized(['admin']) , createCompany)
+router.get('/get/all' , Authentication , isAutherized(['admin']) , getAllCompnys)
 router.post('/login' , loginCompany)
 router.post('/logout' , logOutCompany)
 router.post('/update' , Authentication , updateCompany)

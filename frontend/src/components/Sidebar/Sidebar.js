@@ -6,10 +6,18 @@ import { Nav } from "reactstrap";
 import PerfectScrollbar from "perfect-scrollbar";
 import { useNavigate } from 'react-router-dom';
 import logo from "logo.svg";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import { toast } from "sonner";
+import { setAdmins, setAllSelected, setAppliedJobs, setCompanys, setJobs, setSelectedJob, setStudents, setUser } from "../../redux/userSlice";
+import { userApi , companyApi } from "../../utils/utils";
+import { setApplicants, setCompany, setCompanyJobs } from "../../redux/companySlice";
+
 
 var ps;
 
 function Sidebar(props) {
+
 const navigate = useNavigate();
  
 // function handleLogout() {
@@ -19,6 +27,9 @@ const navigate = useNavigate();
 //   // Navigate to the home page
 //   navigate('/');
 // }
+const {user} = useSelector(store=>store.user)
+const {company} = useSelector(store=>store.company)
+const dispatch = useDispatch()
   
   const location = useLocation();
   const sidebar = React.useRef();
@@ -39,6 +50,45 @@ const navigate = useNavigate();
       }
     };
   }, [location]); // Add location as a dependency
+
+  const handleLogout = async()=>{
+       if(user !== null){
+        try {
+          const res =await axios.post(`${userApi}/logout`, {}, {
+            withCredentials:true
+          })
+           if(res.data.success){
+            toast.success(res.data.message);
+            dispatch(setUser(null))
+            dispatch(setAdmins([]))
+            dispatch(setCompanys([]))
+            dispatch(setStudents([]))
+            dispatch(setJobs([]))
+            dispatch(setAppliedJobs([]))
+            dispatch(setSelectedJob(null))
+            dispatch(setAllSelected([]))
+           }
+        } catch (error) {
+          toast.error(error.response.data.message)
+          console.log(error)
+        }
+       }else if( company !== null){
+        try {
+          const res =await axios.post(`${companyApi}/logout`,{} ,{
+            withCredentials:true
+          })
+           if(res.data.success){
+            toast.success(res.data.message);
+            dispatch(setCompany(null))
+            dispatch(setCompanyJobs([]))
+            dispatch(setApplicants([]))
+           }
+        } catch (error) {
+          toast.error(error.response?.data?.message)
+          console.log(error)
+        }
+       }
+  }
 
   return (
     <div
@@ -80,10 +130,7 @@ const navigate = useNavigate();
             );
           })}
           <li>
-          <NavLink to="/" className="nav-NavLink" onClick={()=>{
-            // <Navigate to='/' /> 
-            navigate("/");
-          }}>
+          <NavLink to="/" className="nav-NavLink" onClick={handleLogout}>
               <i className="fa fa-sign-out" />
               <p>Logout</p>
           </NavLink>

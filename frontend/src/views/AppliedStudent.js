@@ -1,11 +1,42 @@
-import React from 'react'
-import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button } from "reactstrap";
+import axios from 'axios';
+import React, { useEffect } from 'react'
+import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button, Badge } from "reactstrap";
+import { applicationApi } from '../utils/utils';
+import { useDispatch, useSelector } from 'react-redux';
+import { setAppliedJobs } from '../redux/userSlice';
 
 const AppliedStudent = () => {
+
+  const dispatch = useDispatch()
+  const { appliedJobs } = useSelector(store => store.user)
+  const color = {
+    accepted:'success',
+    rejected:'danger',
+    pending:'primary'
+}
+
+  useEffect(() => {
+    const getAllAppliedJobs = async () => {
+      try {
+        const res = await axios.get(`${applicationApi}/applied/jobs`, {
+          withCredentials: true
+        })
+        if (res.data.success) {
+          dispatch(setAppliedJobs(res.data.applieds))
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getAllAppliedJobs()
+  }, [dispatch])
+
+
+
   return (
-       
+
     <div className="content">
-    {/* <Navbar color="dark" light expand="md">
+      {/* <Navbar color="dark" light expand="md">
       <NavbarBrand href="/">Placement Management System</NavbarBrand>
       <Nav className="mr-auto" navbar></Nav>
       <NavItem>
@@ -14,41 +45,52 @@ const AppliedStudent = () => {
         </a>
       </NavItem>
     </Navbar> */}
-    <Row>
-      <Col md="12">
-        <Card>
-          <CardHeader>
-            <CardTitle tag="h4">Applied </CardTitle>
-          </CardHeader>
-          <CardBody>
-            <Table responsive>
-              <thead className="text-primary">
-                <tr>
-                  <th>Name</th>
-                  <th>Company </th>
-                  <th>Branch</th>
-                  
-                  
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Dakota Rice</td>
-                  <td>Flipcart</td>
-                  <td>csbs</td>
-                  
-                  {/* <td className="text-right">
-                   <button className='rounded '><a href="#" className='bold'>view</a></button>
-                  </td> */}
-                </tr>
-               
-              </tbody>
-            </Table>
-          </CardBody>
-        </Card>
-      </Col>
-    </Row>
-  </div>
+      <Row>
+        <Col md="12">
+          <Card>
+            <CardHeader>
+              <CardTitle tag="h4">Applied </CardTitle>
+            </CardHeader>
+            <CardBody>
+              <Table responsive>
+                <thead className="text-primary">
+                  <tr>
+                    <th>Company Name</th>
+                    <th>Title</th>
+                    <th>Position</th>
+                    <th>Pakage</th>
+                    <th className='text-end'>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {
+                    appliedJobs?.map((job, key) => {
+                      return (
+                        <tr key={key}>
+                          <td>{job?.job?.company?.name}</td>
+                          <td>{job?.job?.title}</td>
+                          <td>{job?.job?.position}</td>
+                          <td>{job?.job?.salary}</td>
+                          <td className='text-end'>
+                            <h6> <Badge className='py-2 px-3' color={color[job?.status]
+                            }>
+                              {job?.status  }
+                            </Badge></h6>
+                          </td>
+                        </tr>
+                      )
+                    })
+
+                  }
+
+
+                </tbody>
+              </Table>
+            </CardBody>
+          </Card>
+        </Col>
+      </Row>
+    </div>
 
 
   )

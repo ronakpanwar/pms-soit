@@ -19,12 +19,11 @@ const Authentication = async(req,res,next)=>{
         }
 
         req.id = decode.Id;
-        if(decode.role){
-            req.role = decode.role;
-        }
+        // console.log(decode.role)
+        req.role = decode.role || null ;
         next();
 
-        
+    
     } catch (error) {
         console.log(error)
     }
@@ -37,6 +36,7 @@ const isAutherized = (role=[])=>{
             success:false,
             message:"user not login...",
         })
+        // console.log(req.role)
         if(!role.includes(req.role)){
             return res.status(404).json({
             success:false,

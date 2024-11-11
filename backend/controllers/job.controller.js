@@ -2,8 +2,8 @@ const Job = require("../models/job.model");
 
 const createJob = async(req,res)=>{
     try {
-        const {title , description , requirments , salary , location , jobType , position} = req.body
-        if(!title || !description || !requirments || !salary || !location || !jobType || !position){
+        const {title , description , requirments , salary , location , jobType , position , cgpa } = req.body
+        if(!title || !description || !requirments || !salary || !location || !jobType || !position || !cgpa){
             return res.status(400).json({
                 message:"Somthing missing..",
                 success:false
@@ -17,6 +17,7 @@ const createJob = async(req,res)=>{
             salary,
             location,
             jobType,
+            cgpa,
             position,
             company:companyId
         })
@@ -36,7 +37,7 @@ const createJob = async(req,res)=>{
 
 const getAllJobs = async(req,res)=>{
     try {
-        const job = await Job.find();
+        const job = await Job.find().populate({path:'company'});
         if(!job){
             return res.status(404).json({
                 message:"Job not found...",

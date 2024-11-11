@@ -10,7 +10,7 @@ import UpdateStudent from "../views/UpdateStudent.js";
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
 
 import Sidebar from "../components/Sidebar/Sidebar.js";
@@ -18,6 +18,8 @@ import Sidebar from "../components/Sidebar/Sidebar.js";
 
 import Uroutes from "../Uroutes.js";
 import AppliedStudent from "views/AppliedStudent.js";
+import { useSelector } from "react-redux";
+import DetailJob from "../views/DetailJob.js";
 
 var ps;
 
@@ -25,17 +27,22 @@ function Dashboard(props) {
   
   const context = useContext(noteContext);
 
-  const [studentData , setStudentData] = useState(null);
+
   
  
   console.log(props.data)
   
+const navigate = useNavigate();
 
+const {user} = useSelector(store=>store.user)
+if(user?.role !== 'student' || user === null){
+  navigate('/')
+ }
 
   const [backgroundColor, setBackgroundColor] = React.useState("black");
   const [activeColor, setActiveColor] = React.useState("info");
-  const state = "/user-layout/user";
-  const Name = "Student";
+  const state = "/user-layout/profile";
+  const Name = user?.fullname;
   const mainPanel = React.useRef();
   const location = useLocation();
   React.useEffect(() => {
@@ -71,11 +78,11 @@ function Dashboard(props) {
       <div className="main-panel" ref={mainPanel}>
         {/* <DemoNavbar {...props} /> */}
         <Routes>
- 
-              <Route path="/user" element = {<User/>}/>
+               <Route path='/detail-job' element= {<DetailJob/>}/>
+              <Route path="/profile" element = {<User/>}/>
               <Route path="/update-student" element = {<UpdateStudent/>}/>
               <Route path="/table-op" element={<TablesOp Name={Name}/>} />
-              <Route path="/tablescom" element={<TablesCom/>} />
+              <Route path="/tables-com" element={<TablesCom/>} />
               <Route path="/updatepassword" element={<UpdatePassword/>} />
               <Route path="/applied-student" element={<AppliedStudent/>}/>
              

@@ -48,8 +48,8 @@ const register = async(req,res)=>{
 
 const loginUser = async(req,res)=>{
     try {
-        const { email , password , role } = req.body;
-        if(!email || !password || !role ){
+        const { email , password } = req.body;
+        if(!email || !password ){
             return res.status(400).json({
                 message:"Somthing missing..",
                 success:false
@@ -72,13 +72,7 @@ const loginUser = async(req,res)=>{
                 success:false
             })
         }
-        if(role !== user.role){
-            return res.status(400).json({
-                message:"Account dosn't exsist for this role...",
-                success:false
-            })
-        }
-
+       
         const tokenData = {
             Id : user._id,
             role : user.role
@@ -96,7 +90,8 @@ const loginUser = async(req,res)=>{
             profile:user.profile
         };
         
-        return res.status(200).cookie('token',token , {maxAge:1*24*60*60*1000 , sameSite:'strict'}).json({
+        
+        return res.status(200).cookie('token',token , {maxAge:1*24*60*60*1000 , sameSite:'strict' }).json({
             message:`welcome back ${user.fullname}`,
             user,
             success:true
@@ -303,7 +298,7 @@ const updateProfile = async(req,res)=>{
     }
 }
 
-const logOut = (req,res)=>{
+const logOut = async(req,res)=>{
     try {
         return res.status(200).cookie('token' ,'' ,{maxAge:0}).json({
            message:'You Logged Out Successfully..',

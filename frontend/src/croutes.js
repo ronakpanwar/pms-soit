@@ -3,6 +3,8 @@ import CreateJob  from "views/CreateJob";
 import SelectedStudent from "views/SelectedStudent";
 import UpdatePassword from "views/UpdatePassword";
 import Applications from "views/Applications";
+import UpdateCompanyProfile from "./views/UpdateCompanyProfile";
+import CompanyJobs from "./views/CompanyJobs";
 
 var routes = [
     {
@@ -13,10 +15,17 @@ var routes = [
         layout: "/company-layout",
       },
       {
-        path: "/create-job",
-        name: "Create Job",
+        path: "/update-profile",
+        name: "Update Profile",
+        icon: "fa-solid fa-pen-to-square",
+        component: <UpdateCompanyProfile/>,
+        layout: "/company-layout",
+      },
+      {
+        path: "/job-list",
+        name: "Companys Openings  ",
         icon: "fa-solid fa-plus",
-        component: <CreateJob/>,
+        component: <CompanyJobs/>,
         layout: "/company-layout",
       },
       {
@@ -26,13 +35,13 @@ var routes = [
         component: <Applications />,
         layout: "/company-layout",
       },
-      {
-        path: "/selected-student",
-        name: "Selected Student",
-        icon: "fa-solid fa-graduation-cap",
-        component: <SelectedStudent/>,
-        layout: "/company-layout",
-      },
+      // {
+      //   path: "/selected-student",
+      //   name: "Selected Student",
+      //   icon: "fa-solid fa-graduation-cap",
+      //   component: <SelectedStudent/>,
+      //   layout: "/company-layout",
+      // },
     
       {
     path: "/updatepassword",

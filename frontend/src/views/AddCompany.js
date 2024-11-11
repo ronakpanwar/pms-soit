@@ -1,5 +1,6 @@
 import React, { useState , useContext } from 'react';
 import NoteContext from 'context/notes/noteContext';
+import { companyApi } from '../utils/utils';
 import {
     Button,
     Card,
@@ -14,6 +15,8 @@ import {
     Col,
     Label,
   } from "reactstrap";
+import { toast } from 'sonner';
+import axios from 'axios';
 
 function AddCompany()  {
 
@@ -21,11 +24,8 @@ function AddCompany()  {
   const {addCompany} = context;
 
     const [formData, setFormData] = useState({
-        companyname: '',
-       address: '',
+        name: '',
         email: '',
-        website: '',
-        phone: '',
         password: ''
       });
 
@@ -37,19 +37,23 @@ function AddCompany()  {
         });
       };
       
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    // console.log(formData); // Here, you can do whatever you want with the formData
-    // For example, you can send the formData to a server using fetch or axios
-    addCompany(formData);
-    // setFormData({
-    //   CompanyName: '',
-    //    address: '',
-    //     email: '',
-    //     Website: '',
-    //     phone: '',
-    //     password: ''
-    // })
+     try {
+      const res = await axios.post(`${companyApi}/create` , formData , {
+        headers:{
+          'Content-Type':'application/json'
+        },
+        withCredentials:true
+      })
+      if(res.data.success){
+        toast.success(res.data.message);
+      }
+      
+     } catch (error) {
+      toast.error(error.response.data.message)
+     }
+   
   };
     
   return (
@@ -58,33 +62,22 @@ function AddCompany()  {
         <Col md="12">
           <Card className="card-user">
             <CardHeader>
-              <CardTitle tag="h5" >Add Companys</CardTitle>
+              <CardTitle tag="h5" >Add Company</CardTitle>
             </CardHeader>
             <CardBody>
               <FormGroup>
                 <Label for="companyname">Company Name</Label>
                 <Input
                   type="text"
-                  name="companyname"
-                  id="companyname"
+                  name="name"
+                  id="name"
                   placeholder="CompanyName"
-                  value={formData.companyname}
+                  value={formData.name}
                   onChange={handleChange}
                   required
                 />
               </FormGroup>
-              <FormGroup>
-                <Label for="address">Company Address</Label>
-                <Input
-                  type="text"
-                  name="address"
-                  id="address"
-                  placeholder="location"
-                  value={formData.address}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
+             
               <FormGroup>
                 <Label for="email">Email address</Label>
                 <Input
@@ -97,33 +90,7 @@ function AddCompany()  {
                   required
                 />
               </FormGroup>
-              <FormGroup>
-                <Label for="website">Website</Label>
-                <Input
-                  type="link"
-                  name="website"
-                  id="website"
-                  placeholder="www.xyz"
-                  value={formData.website}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="phone">Phone No.</Label>
-                <Input
-                  type="number"
-                  name="phone"
-                  id="phone"
-                  placeholder="phone no"
-                  value={formData.phone}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-             
-           
-             
+          
               <FormGroup>
                 <Label for="password">Password</Label>
                 <Input

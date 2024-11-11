@@ -1,0 +1,7 @@
+.link-hover:hover {
+   /* Change background color on hover */
+  /* Change text color on hover */
+    background-color: whitesmoke;
+    text-decoration: underline; /* Add underline on hover */
+    transition: background-color 0.3s ease, color 0.3s ease, text-decoration 0.3s ease;
+  }

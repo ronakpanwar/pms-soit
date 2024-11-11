@@ -16,10 +16,13 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useSelector } from "react-redux";
 
 function User(props) {
- 
- const context = useContext(noteContext);
+
+  const context = useContext(noteContext);
+
+  const { user } = useSelector(store => store.user)
 
   const [image, setImage] = useState(userImage);
 
@@ -58,14 +61,14 @@ function User(props) {
                     <Col className="pr-1" md="5">
                       <FormGroup>
                         <label>Name</label>
-                        <p>{context.sData.firstname + context.sData.lastname}</p>
+                        <p>{user?.fullname}</p>
                       </FormGroup>
                     </Col>
                     <Col className="px-1" md="3">
                       <FormGroup>
                         <label>Enrollment no.</label>
-                        <p>{context.sData.enrollmentno}</p>
-                       
+                        <p>{user?.profile?.enrolmentNo}</p>
+
                       </FormGroup>
                     </Col>
                     <Col className="pl-1" md="4">
@@ -73,7 +76,7 @@ function User(props) {
                         <label htmlFor="exampleInputEmail1">
                           Email address
                         </label>
-                        <p>{context.sData.email}</p>
+                        <p>{user?.email}</p>
                       </FormGroup>
                     </Col>
                   </Row>
@@ -81,69 +84,81 @@ function User(props) {
                     <Col className="pr-1 " md="5">
                       <FormGroup>
                         <label>Branch </label>
-                        <p>{context.sData.branch}</p>
+                        <p>{user?.profile?.branch}</p>
                       </FormGroup>
                     </Col>
                     <Col className="pl-1" md="3">
                       <FormGroup>
-                        <label>Year</label>
-                        <p>{context.sData.year}</p>
-                       
+                        <label>Semister</label>
+                        <p>{user?.profile?.semister}</p>
+
                       </FormGroup>
                     </Col>
                     <Col className="pl-1" md="3">
                       <FormGroup>
                         <label>Gender</label>
-                        <p>{context.sData.gender}</p>
+                        <p>{user?.gender}</p>
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Row>
-                    <Col md="12" className="m-4">
+
+                  <Row className="m-2">
+                    <Col md="5" className="pr-1">
                       <FormGroup>
                         <label>Address</label>
-                        <p>{context.sData.address}</p>
+                        <p>{user?.profile?.address}</p>
                       </FormGroup>
                     </Col>
-                  </Row>
-                  <Row className="m-2">
-                    <Col className="pr-1 " md="6">
+                    <Col className="pl-1 " md="3">
                       <FormGroup>
                         <label>phone no.</label>
-                        <p>{context.sData.phonenumber}</p>
+                        <p>{user?.phoneNo}</p>
                       </FormGroup>
                     </Col>
-                    <Col className="px-1 " md="6">
+                    <Col className="pl-1 " md="3">
                       <FormGroup>
-                        <label>password</label>
-                        <p>{context.sData.password}</p>
+                        <label>CGPA</label>
+                        <p>{user?.profile?.cgpa}</p>
                       </FormGroup>
                     </Col>
 
                   </Row>
                   <Row>
-                    <Col md="12" className="m-4">
+
+                  </Row>
+                  <Row>
+                    {/* <Col md="12" className="m-4">
                       <FormGroup>
                         <label>About Me</label>
                         <p>{context.sData.aboutme}</p>
                       </FormGroup>
-                    </Col>
+                    </Col> */}
                   </Row>
                   <Row>
-                    <Col md="12" className="m-4">
+                    <Col md="12" className="my-2 mx-4">
                       <FormGroup>
                         <label>Skills</label>
-                        <p>{context.sData.skills}</p>
+                        <div className="d-flex gap-3">
+                          {
+                            user?.profile?.skills.map((skill, key) => {
+                              return (
+                                <p key={key} >{skill}</p>
+                              )
+
+                            })
+                          }
+                        </div>
+
                       </FormGroup>
                     </Col>
                   </Row>
                   <Row>
-                    <Col md="12" className="m-4">
+                    {/* <Col md="12" className="m-4">
                       <FormGroup>
                         <label>Experience</label>
                         <p>{context.sData.experience}</p>
                       </FormGroup>
-                    </Col>
+                    </Col> */}
                   </Row>
                   <Row >
                     <Col md="4" >
@@ -152,13 +167,12 @@ function User(props) {
                   </Row>
                   <Row className="my-4">
                     <div className="update ml-auto mr-auto">
-                      <Button
-                        className="btn-round"
-                        color="primary"
-                        type="submit"
+                      <a
+                        href="/user-layout/update-student"
+                        className="btn btn-primary btn-round text-white text-decoration-none"
                       >
-                       <a href="/user-layout/update-student" style={{color:"white" , textDecoration: 'none'}}> Update Profile </a>
-                      </Button>
+                        Update Profile
+                      </a>
                     </div>
                   </Row>
                 </Form>

@@ -95,7 +95,7 @@ const updateCompany = async(req,res)=>{
         if(!company){
             return res.status(400).json({
                 message:"Company Not Found...",
-                success:false
+                success:false 
             })
         }
 
@@ -132,6 +132,21 @@ const deleteCompany = async(req,res)=>{
     }
 }
 
+const getAllCompnys = async(req,res)=>{
+    try {
+        const companys = await Company.find();
+        return res.status(200).json({
+            success:true,
+            companys
+        })
+        
+    } catch (error) {
+        return res.status(500).json({
+            message :error,
+            success:false
+        })
+    }
+}
 
 
 const logOutCompany = (req,res)=>{
@@ -152,5 +167,6 @@ module.exports = {
     loginCompany,
     logOutCompany,
     updateCompany,
-    deleteCompany
+    deleteCompany, 
+    getAllCompnys
 }

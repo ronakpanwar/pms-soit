@@ -1,42 +1,60 @@
+import axios from 'axios';
 import React, { useState } from 'react';
 import {
-    Button,
-    Card,
-    CardHeader,
-    CardBody,
-    CardFooter,
-    CardTitle,
-    FormGroup,
-    Form,
-    Input,
-    Row,
-    Col,
-    Label,
-  } from "reactstrap";
+  Button,
+  Card,
+  CardHeader,
+  CardBody,
+  CardFooter,
+  CardTitle,
+  FormGroup,
+  Form,
+  Input,
+  Row,
+  Col,
+  Label,
+} from "reactstrap";
+import { toast } from 'sonner';
+import { jobApi } from '../utils/utils';
 
-function CreateJob()  {
-    const [formData, setFormData] = useState({
-          position:'',
-          cgpa:'',
-          work:'',
-          pakage:'',
-          skills:'',
-      });
+function CreateJob() {
+  const [formData, setFormData] = useState({
+    title: "",
+    description: "",
+    requirments: "",
+    location: "",
+    jobType: '',
+    cgpa: '',
+    position: '',
+    salary: '',
+  });
 
-      const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData({
-          ...formData,
-          [name]: value
-        });
-      };
-      
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    console.log(formData); // Here, you can do whatever you want with the formData
-    // For example, you can send the formData to a server using fetch or axios
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value
+    });
   };
-    
+
+  const handleSubmit = async(e) => {
+    e.preventDefault();
+    try {
+      const res = await axios.post(`${jobApi}/postjob` , formData , {
+        headers:{
+          'Content-Type':'application/json'
+        },
+        withCredentials:true
+      })
+      if(res.data.success){
+        toast.success(res.data.message)
+      }
+      
+    } catch (error) {
+      toast.error(error.response?.data?.message)
+    }
+  };
+
   return (
     <Form className='content' onSubmit={handleSubmit}>
       <Row>
@@ -46,6 +64,54 @@ function CreateJob()  {
               <CardTitle tag="h5" >Create job</CardTitle>
             </CardHeader>
             <CardBody>
+            <FormGroup>
+                <Label for="title">Title</Label>
+                <Input
+                  type="text"
+                  name="title"
+                  id="title"
+                  placeholder="Job title"
+                  value={formData.title}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="description">Description</Label>
+                <Input
+                  type="text"
+                  name="description"
+                  id="description"
+                  placeholder="about job"
+                  value={formData.description}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="location">Location</Label>
+                <Input
+                  type="text"
+                  name="location"
+                  id="location"
+                  placeholder="location"
+                  value={formData.location}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
+              <FormGroup>
+                <Label for="jobType">Job Type</Label>
+                <Input
+                  type="text"
+                  name="jobType"
+                  id="jobType"
+                  placeholder=""
+                  value={formData.jobType}
+                  onChange={handleChange}
+                  required
+                />
+              </FormGroup>
               <FormGroup>
                 <Label for="position">Position</Label>
                 <Input
@@ -70,46 +136,35 @@ function CreateJob()  {
                   required
                 />
               </FormGroup>
-              <FormGroup>
-                <Label for="work">Work Duration</Label>
-                <Input
-                  type="textarea"
-                  name="work"
-                  id="work"
-                  placeholder="Time of work and month"
-                  value={formData.work}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
+            
               <FormGroup>
                 <Label for="pakage">Pakage</Label>
                 <Input
                   type="text"
-                  name="pakage"
-                  id="pakage"
+                  name="salary"
+                  id="salary"
                   placeholder=" in lpa"
-                  value={formData.pakage}
+                  value={formData.salary}
                   onChange={handleChange}
                   required
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="skills">Skills</Label>
+                <Label for="skills">Requirments</Label>
                 <Input
                   type="textarea"
-                  name="skills"
-                  id="skills"
+                  name="requirments"
+                  id="requirments"
                   placeholder="Require Skills"
-                  value={formData.skills}
+                  value={formData.requirments}
                   onChange={handleChange}
                   required
                 />
               </FormGroup>
-             
-           
-             
-           
+
+
+
+
               <Button type="submit" color="primary">create job</Button>
             </CardBody>
           </Card>

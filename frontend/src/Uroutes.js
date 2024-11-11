@@ -10,7 +10,7 @@ import AppliedStudent from "views/AppliedStudent.js";
 
 var routes = [
     {
-        path: "/user",
+        path: "/profile",
         name: "Profile",
         icon: "nc-icon nc-single-02",
         component: <User/>,

@@ -4,7 +4,7 @@ import AddStudent from "../views/AddStudent.js";
 import AddCompany from "views/AddCompany.js";
 // javascript plugin used to create scrollbars on windows
 import PerfectScrollbar from "perfect-scrollbar";
-import { Route, Routes, useLocation } from "react-router-dom";
+import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import TableList from "../views/Tables.js";
 import TablesCom from "../views/TablesCom.js";
 import TablesOp from "../views/TablesOp.js";
@@ -19,16 +19,28 @@ import Sidebar from "../components/Sidebar/Sidebar.js";
 import NoteContext from "context/notes/noteContext.js";
 import routes from "../routes.js";
 import { useContext } from "react";
+import { useSelector } from "react-redux";
+import TableAdmin from "../views/TableAdmin.js";
+import AddAdmin from "../views/AddAdmin.js";
+import DetailJob from "../views/DetailJob.js";
 
 var ps;
 
 function Dashboard(props) {
+  const navigate = useNavigate()
+
+  const {user} = useSelector(store=>store.user)
+  if(user?.role !== 'admin' || user === null){
+    navigate('/')
+   }
+   
+  
   const [backgroundColor, setBackgroundColor] = React.useState("black");
   const [activeColor, setActiveColor] = React.useState("info");
   const mainPanel = React.useRef();
   const location = useLocation();
   const state = "/admin/dashboard";
-  const Name = "Admin";
+  const Name = user?.fullname;
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(mainPanel.current);
@@ -48,6 +60,10 @@ function Dashboard(props) {
 
   const admin = useContext(NoteContext);
 
+  if(user?.role !== 'admin' || user === null){
+   navigate('/')
+  }
+  
   // console.log(admin.Astate.name);
  
 
@@ -58,6 +74,7 @@ function Dashboard(props) {
       <DemoNavbar/> 
       <Sidebar
         {...props}
+       
         state = {state}
         Name = {Name}
         routes={routes}
@@ -68,11 +85,14 @@ function Dashboard(props) {
       <div className="main-panel" ref={mainPanel}>
      
         <Routes>
+        <Route path="/admin-list" element={<TableAdmin/>}/>
+        <Route path="/add-admin" element={<AddAdmin/>}/>
+        <Route path="/detail-job" element={<DetailJob/>}/>
            <Route path="/dashboard" element={ <Secondboard />}/>
            <Route path="/add-student" element={ <AddStudent />}/>
-           <Route path="/tables" element={ <TableList  />}/>
-           <Route path="/tablescom" element={ <TablesCom />}/>
-           <Route path="/tablesop" element={ <TablesOp />}/>
+           <Route path="/student-list" element={ <TableList  />}/>
+           <Route path="/company-list" element={ <TablesCom />}/>
+           <Route path="/opening-list" element={ <TablesOp />}/>
            <Route path="/s-student" element={ <SelectedStudent />}/>
            <Route path="/updatepassword" element={ <UpdatePassword admin = {admin} Name={Name} />}/>
            <Route path="/add-company" element={<AddCompany/>}/>

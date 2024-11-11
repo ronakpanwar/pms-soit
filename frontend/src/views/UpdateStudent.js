@@ -1,7 +1,7 @@
-import React, { useState , useContext } from 'react';
+import React, { useState , useContext, useEffect } from 'react';
 import User from './User';
 import noteContext from 'context/notes/noteContext';
-
+import { userApi } from '../utils/utils';
 import {
   Button,
   Card,
@@ -16,18 +16,30 @@ import {
   Col,
   Label,
 } from "reactstrap";
+import { useDispatch, useSelector } from 'react-redux';
+import { toast } from 'sonner';
+import axios from 'axios';
+import { setUser } from '../redux/userSlice';
 
 function UpdateStudent(props) {
 
   const context = useContext(noteContext);
+ 
+  const {user}  = useSelector(store=>store.user)
+  const dispatch = useDispatch()
+  const [resume , setResume] = useState();
+
+  const [formData, setFormData] = useState({
+ fullname:user?.fullname,
+        phoneNo:user?.phoneNo,
+        branch: '',
+        cgpa:'',
+        address: '',
+        semister: '',
+        skills: '',
+  });
 
 
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
-  const [formData, setFormData] = useState(context.sData);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -37,12 +49,24 @@ function UpdateStudent(props) {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
-    console.log(formData); // Here, you can do whatever you want with the formData
-    context.updateStudent(formData);
-    context.studentdata(formData);
-    // For example, you can send the formData to a server using fetch or axios
+    try {
+      const res = await axios.post(`${userApi}/update/student`, formData , {
+        headers:{
+          'Content-Type':'application/json'
+        },
+        withCredentials:true
+      })
+      if(res.data.success){
+        toast.success(res.data.message)
+        dispatch(setUser(res.data.user))
+      }
+      
+    } catch (error) {
+      toast.error(error.response?.data?.message)
+    }
+    
   };
 
   return (
@@ -54,38 +78,17 @@ function UpdateStudent(props) {
               <CardTitle tag="h5" >Update Profile</CardTitle>
             </CardHeader>
             <CardBody>
+            
+              
+              
               <FormGroup>
-                <Label for="firstName">First Name</Label>
+                <Label for="email">Full Name</Label>
                 <Input
                   type="text"
-                  name="firstName"
-                  id="firstName"
-                  placeholder="First Name"
-                  value={formData.firstname}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="lastName">Last Name</Label>
-                <Input
-                  type="text"
-                  name="lastName"
-                  id="lastName"
-                  placeholder="Last Name"
-                  value={formData.lastname}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <FormGroup>
-                <Label for="email">Email address</Label>
-                <Input
-                  type="email"
-                  name="email"
-                  id="email"
-                  placeholder="Email"
-                  value={formData.email}
+                  name="fullname"
+                  id="fullname"
+                  placeholder="Enter your full name"
+                  value={formData.fullname}
                   onChange={handleChange}
                   required
                 />
@@ -96,7 +99,7 @@ function UpdateStudent(props) {
                   type="text"
                   name="address"
                   id="address"
-                  placeholder="Address"
+                  placeholder="Enter your Local Address"
                   value={formData.address}
                   onChange={handleChange}
                   required
@@ -114,105 +117,70 @@ function UpdateStudent(props) {
                   required
                 />
               </FormGroup>
+         
               <FormGroup>
-                <Label for="enrollmentNo">Enrollment No.</Label>
+                <Label for="year">Semister</Label>
                 <Input
                   type="text"
-                  name="enrollmentNo"
-                  id="enrollmentNo"
-                  placeholder="Enrollment No."
-                  value={formData.enrollmentno}
+                  name="semister"
+                  id="semister"
+                  placeholder="current semister"
+                  value={formData.semister}
                   onChange={handleChange}
                   required
                 />
               </FormGroup>
               <FormGroup>
-                <Label for="year">Year</Label>
+                <Label for="year">CGPA</Label>
                 <Input
                   type="text"
-                  name="year"
-                  id="year"
-                  placeholder="Year"
-                  value={formData.year}
+                  name="cgpa"
+                  id="cgpa"
+                  placeholder="current cgpa"
+                  value={formData.cgpa}
                   onChange={handleChange}
                   required
                 />
               </FormGroup>
-              <FormGroup>
-                <Label for="gender">Gender</Label>
-                <Input
-                  type="select"
-                  name="gender"
-                  id="gender"
-                  value={formData.gender}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Select Gender</option>
-                  <option value="male">Male</option>
-                  <option value="female">Female</option>
-                </Input>
-              </FormGroup>
+            
               <FormGroup>
                 <Label for="phoneNumber">Phone Number</Label>
                 <Input
                   type="text"
-                  name="phoneNumber"
-                  id="phoneNumber"
+                  name="phoneNo"
+                  id="phoneNo"
                   placeholder="Phone Number"
-                  value={formData.phonenumber}
+                  value={formData.phoneNo}
                   onChange={handleChange}
                   required
                 />
               </FormGroup>
-              <FormGroup>
-                <Label for="about-me">About Me</Label>
-                <Input
-                  type="textarea"
-                  name="about"
-                  id="about-me"
-                  placeholder="About your self"
-                  value={formData.about}
-                  onChange={handleChange}
-                  required
-                /> 
-              </FormGroup>
+            
               <FormGroup>
                 <Label for="skills">Skills</Label>
                 <Input
                   type='textarea'
                   name="skills"
                   id="skills"
-                  placeholder="Enter your skills"
+                  placeholder="HTML , CSS ,..."
                   value={formData.skills}
                   onChange={handleChange}
                   required
                 /> 
               </FormGroup>
-              <FormGroup>
-                <Label for="experience">Experience</Label>
-                <Input
-                  type="textarea"
-                  name="experience"
-                  id="experience"
-                  placeholder="Enter your experience"
-                  value={formData.experience}
-                  onChange={handleChange}
-                  required
-                /> 
-              </FormGroup>
-              <FormGroup>
+           
+              {/* <FormGroup>
                 <Label for="resume">Uplode your Resume</Label>
                 <Input
                   type="file"
                   name="resume"
                   id="resume"
                   
-                  value={formData.resume}
-                  onChange={handleChange}
+                  value={resume}
+                  onChange={(e)=>setResume(e.target.value)}
                   required
                 /> 
-              </FormGroup>
+              </FormGroup> */}
               
               <Button type="submit" color="primary"> Update Profile</Button>
             </CardBody>

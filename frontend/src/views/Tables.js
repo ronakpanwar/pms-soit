@@ -1,20 +1,43 @@
 
-import React ,{useContext} from "react";
+import React ,{useContext, useEffect} from "react";
 import NoteContext from "context/notes/noteContext";
 import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button } from "reactstrap";
+import { useDispatch, useSelector } from "react-redux";
+import axios from "axios";
+import {userApi}  from '../utils/utils'
+import { setStudents } from "../redux/userSlice";
 
 function Tables() {
+ 
+  const {students}  = useSelector(store=>store.user)
+  const dispatch = useDispatch();
 
-  const student = useContext(NoteContext);
+  useEffect(()=>{
+    const getStudents = async()=>{
+      try {
+        const res = await axios.get(`${userApi}/get/student`, {
+          withCredentials:true
+        })
+        if(res.data.success){
+          dispatch(setStudents(res.data.students))
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getStudents()
+  },[dispatch])
 
   return (
+
+
     
       <>
      
         <div className="content ">
-          <Navbar color="dark" light expand="md">
+          <Navbar className="px-4" color="dark" light expand="md">
             <NavbarBrand href="#">Placement Management System</NavbarBrand>
-            <Nav className="mr-auto" navbar></Nav>
+            <Nav className="ms-auto" navbar></Nav>
             <NavItem>
               <a href="/admin/add-student">
               <Button color="primary mx-2">Add Student</Button>
@@ -41,15 +64,15 @@ function Tables() {
                       </tr>
                     </thead>
                     <tbody>
-                    {student.student.map((student, index) => (
+                    {students?.map((student, index) => (
                       <tr key={index}>
-                        <td>{student.firstname }{student.lastname} </td>
-                        <td>{student.gender}</td>
-                        <td>{student.enrollmentno}</td>
-                        <td>{student.phonenumber}</td>
-                        <td>{student.branch}</td>
+                        <td>{student?.fullname}</td>
+                        <td>{student?.gender}</td>
+                        <td>{student?.profile?.enrolmentNo}</td>
+                        <td>{student?.phoneNo}</td>
+                        <td>{student?.profile?.branch}</td>
                         <td className="text-right">
-                          <Button className="mx-1 border-success rounded"><i className="fa-solid fa-pen-to-square"></i></Button>
+                         
                           <Button className="rounded"><i className="fa-solid fa-trash"></i></Button>
                         </td>
                       </tr>

@@ -1,7 +1,7 @@
 import React, { useContext, useState } from 'react';
 import NoteContext from 'context/notes/noteContext';
-
-import { userApi } from '../utils/utils'
+import User from './User';
+import {userApi} from '../utils/utils'
 import {
   Button,
   Card,
@@ -19,23 +19,16 @@ import {
 import axios from 'axios';
 import { toast } from 'sonner';
 
-function AddStudent() {
+function AddAdmin() {
 
-  const Add = useContext(NoteContext);
 
-  const [isChecked, setIsChecked] = useState(false);
-
-  const handleCheckboxChange = () => {
-    setIsChecked(!isChecked);
-  };
 
   const [formData, setFormData] = useState({
     fullname: '',
     email: '',
     gender: '',
     phoneNo: '',
-    password: '',
-    enrolmentNo: ''
+    password: '', 
   });
 
   const handleChange = (e) => {
@@ -46,22 +39,20 @@ function AddStudent() {
     });
   };
 
-
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     try {
-      const res = await axios.post(`${userApi}/add/student`, formData, {
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        withCredentials: true
-      })
-      if (res.data.success) {
-        toast.success(res.data.message)
-      }
+        const res = await axios.post(`${userApi}/add/admin`,formData, {
+            headers:{
+                'Content-Type':'application/json'
+            },
+            withCredentials:true
+        })
+        if(res.data.success){
+            toast.success(res.data.message)
+        }
     } catch (error) {
-      toast.error(error.response.data.message)
+        toast.error(error.response.data.message)
     }
   };
 
@@ -71,22 +62,22 @@ function AddStudent() {
         <Col md="12">
           <Card className="card-user">
             <CardHeader>
-              <CardTitle tag="h5" >Add Students</CardTitle>
+              <CardTitle tag="h5" >Add Admin</CardTitle>
             </CardHeader>
             <CardBody>
               <FormGroup>
-                <Label for="firstname">First Name</Label>
+                <Label for="firstname">Full Name</Label>
                 <Input
                   type="text"
                   name="fullname"
                   id="fullname"
-                  placeholder="First Name"
+                  placeholder="Full Name"
                   value={formData.fullname}
                   onChange={handleChange}
                   required
                 />
               </FormGroup>
-
+              
               <FormGroup>
                 <Label for="email">Email address</Label>
                 <Input
@@ -99,21 +90,8 @@ function AddStudent() {
                   required
                 />
               </FormGroup>
-
-
-              <FormGroup>
-                <Label for="enrollmentno">Enrollment No.</Label>
-                <Input
-                  type="text"
-                  name="enrolmentNo"
-                  id="enrolmentNo"
-                  placeholder="Enrollment No."
-                  value={formData.enrolmentNo}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-
+            
+         
               <FormGroup>
                 <Label for="gender">Gender</Label>
                 <Input
@@ -153,7 +131,7 @@ function AddStudent() {
                   required
                 />
               </FormGroup>
-              <Button type="submit" color="primary">Add Student</Button>
+              <Button type="submit" color="primary">Add Admin</Button>
             </CardBody>
           </Card>
         </Col>
@@ -162,4 +140,4 @@ function AddStudent() {
   );
 };
 
-export default AddStudent;
+export default AddAdmin;

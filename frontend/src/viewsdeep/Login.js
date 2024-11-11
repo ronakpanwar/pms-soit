@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react'
 import { useNavigate } from 'react-router-dom';
 import noteContext from 'context/notes/noteContext';
-
+import { userApi, companyApi } from 'utils/utils';
 
 import {
   Button,
@@ -17,15 +17,27 @@ import {
   Col,
   Label,
 } from "reactstrap";
+import HomeNavbar from './HomeNavbar';
+import axios from 'axios';
+import { toast } from 'sonner';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../redux/userSlice';
+import { setCompany } from '../redux/companySlice';
+
+
+
 const Login = (props) => {
 
+
+   const dispatch = useDispatch();
+  const [loading, setLoading] = useState(false)
   let navigate = useNavigate();
   const context = useContext(noteContext);
 
-
+  const [type, setType] = useState()
   const [userData, setUserData] = useState({
-    type: "",
-    user: "",
+
+    email: "",
     password: ""
   })
 
@@ -39,109 +51,135 @@ const Login = (props) => {
   };
 
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log(userData);
 
-    if (userData.type === "Admin") {
-      if (userData.user === context.admin.email && userData.password === context.admin.password) {
-
-        props.handleLogged("admin");
-        navigate("/admin/dashboard");
-        props.handleData(userData);
+    if (type === 'Admin' || type === 'student') {
+      try {
+        setLoading(true)
+        const res = await axios.post(`${userApi}/login`, userData, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        })
+        if (res.data.success) {
+          toast.success(res.data.message)
+          dispatch(setUser(res.data.user))
+          if (res.data.user.role === 'admin') {
+            navigate("/admin/dashboard");
+          } else if (res.data.user.role === 'student') {
+            navigate("/user-layout/profile");
+          }
+        }
       }
-      else {
-        alert("Enter the correct user and password");
+      catch (error) {
+        toast.error(error.response.data.message)   
+        console.log(error)
+      } finally {
+        setLoading(false)
+      }
+
+    }
+    else if (type === 'company') {
+      try {
+        setLoading(true)
+        const res = await axios.post(`${companyApi}/login`, userData, {
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          withCredentials: true
+        })
+        if (res.data.success) {
+          toast.success(res.data.message)
+          dispatch(setCompany(res.data.company))
+          navigate("/company-layout/company-profile");
+        }
+      }
+      catch (error) {
+        toast.error(error.response.data.message)   
+        console.log(error)
+      } finally {
+        setLoading(false)
       }
     }
-    else if (userData.type === "student") {
-      const student = context.student.find(s => s.enrollmentno === userData.user && s.password === userData.password);
-      if (student) {
-        props.handleLogged("student");
-        navigate("/user-layout/user");
-        props.handleData(userData);
-        context.studentdata(userData);
-      } else {
-        alert("Enter the correct user and password");
-      }
-    } else if (userData.type === "company") {
-      const company = context.company.find(c => c.email === userData.user && c.password === userData.password);
-      if (company) {
-        props.handleLogged("company");
-        navigate("/company-layout/company-profile");
-        props.handleData(userData);
-        context.companydata(userData);
-      } else {
-        alert("Enter the correct user and password");
-      }
-    } 
   }
 
 
+  return (
+    <>
+      <HomeNavbar />
+      <Form className="container my-4" onSubmit={handleSubmit}>
+        <Row className="justify-content-center">
+          <Col md="6" lg="4">
 
+            <Card className="card-user bg-light shadow-sm">
+            
+              <CardBody className="p-4">
+              <p className="fw-bold text-center bg-dark text-white px-2 py-2 fs-6">Sign In to Your Account</p>
+                <FormGroup>
+                  <Label for="type"></Label>
+                  <Input
+                    type="select"
+                    name="type"
+                    id="type"
+                    placeholder="Admin"
+                    value={type}
+                    onChange={(e)=>setType(e.target.value)}
+                    required
+                  >
+                    <option value="">Type</option>
+                    <option value="Admin">Admin</option>
+                    <option value="student">student</option>
+                    <option value="company">company</option>
+                  </Input>
+                </FormGroup>
+                <FormGroup>
+                  <Label for="user" className="fw-medium text-dark">Username</Label>
+                  <Input
+                    type="text"
+                    name="email"
+                    id="email"
+                    placeholder="Enter your username"
+                    value={userData.email}
+                    onChange={handleChange}
+                    required
+                    className="form-control"
+                  />
+                </FormGroup>
 
+                <FormGroup>
+                  <Label for="password" className="fw-medium text-dark">Password</Label>
+                  <Input
+                    type="password"
+                    name="password"
+                    id="password"
+                    placeholder="Enter your password"
+                    value={userData.password}
+                    onChange={handleChange}
+                    required
+                    className="form-control"
+                  />
+                </FormGroup>
 
+                <div className="text-center ">{
+                  loading ? (
+                    <div class="spinner-border " role="status">
+                      <span class="visually-hidden">Loading...</span>
+                    </div>
+                  ) : (<Button type="submit" color="primary" className="w-100 py-2 mt-3">Login</Button>)
+                }
 
-return (
-  <>
-    <Form className='container my-4 ' onSubmit={handleSubmit}  >
-      <Row style={{ justifyContent: "center" }}>
-        <Col md="4">
-          <Card className="card-user bg-dark ">
+                </div>
+              </CardBody>
+            </Card>
+          </Col>
+        </Row>
+      </Form>
 
-            <CardBody >
-
-
-              <FormGroup>
-                <Label for="type"></Label>
-                <Input
-                  type="select"
-                  name="type"
-                  id="type"
-                  placeholder="Admin"
-                  value={userData.type}
-                  onChange={handleChange}
-                  required
-                >
-                  <option value="">Type</option>
-                  <option value="Admin">Admin</option>
-                  <option value="student">student</option>
-                  <option value="company">company</option>
-                </Input>
-              </FormGroup>
-              <FormGroup>
-                <Label for="user">User name</Label>
-                <Input
-                  type="text"
-                  name="user"
-                  id="user"
-                  placeholder="User name"
-                  value={userData.user}
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-
-              <FormGroup>
-                <Label for="password">Password</Label>
-                <Input
-                  type="password"
-                  name="password"
-                  id="password"
-                  value={userData.password}
-                  placeholder='Enter the valid password'
-                  onChange={handleChange}
-                  required
-                />
-              </FormGroup>
-              <Button type="submit" style={{}} color="primary">Login</Button>
-            </CardBody>
-          </Card>
-        </Col>
-      </Row>
-    </Form>
-  </>
-)
+    </>
+  )
 }
 
 export default Login

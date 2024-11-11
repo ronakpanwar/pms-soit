@@ -16,7 +16,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(cookieParser());
 
 const  corsOptions  = {
-    origin:"http://localhost:5173",
+    origin:"http://localhost:3000",
       methods: ['GET', 'POST', 'PUT', 'DELETE'],
     credentials:true
 }
@@ -26,8 +26,7 @@ app.use('/api/v1/user' , userRoute)
 app.use('/api/v1/company' , companyRoute)
 app.use('/api/v1/job' , jobRoute)
 app.use('/api/v1/application' , applicationRoute)
-
-
+ 
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT , ()=>{

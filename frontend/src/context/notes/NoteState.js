@@ -1,5 +1,9 @@
+import axios from "axios";
 import NoteContext from "./noteContext";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { userApi } from "../../utils/utils";
+import { useDispatch } from "react-redux";
+import { setAdmins } from "../../redux/userSlice";
 
 const NoteState = (props)=>{
 
@@ -11,8 +15,17 @@ const NoteState = (props)=>{
     };
 
     const [admin, setAdmin] = useState(adminData);
-    
-   
+      
+
+     const dispatch = useDispatch();
+
+
+     
+
+
+
+
+
 
     const updatePassword = (newPassword) => {
         setAdmin({

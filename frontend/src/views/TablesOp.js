@@ -1,4 +1,6 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 // reactstrap components
 import {
   Card,
@@ -8,17 +10,45 @@ import {
   Table,
   Row,
   Col,
+  Button,
 } from "reactstrap";
+import { jobApi } from '../utils/utils';
+import { setJobs, setSelectedJob } from '../redux/userSlice';
+import { useNavigate } from 'react-router-dom';
 
 
 
 function TablesOp(props) {
+  const { jobs  ,user} = useSelector(store => store.user)
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
+
+  useEffect(() => {
+    const getAllJobs = async () => {
+      try {
+        const res = await axios.get(`${jobApi}/alljobs`, {
+          withCredentials: true
+        })
+        if (res.data.success) {
+          dispatch(setJobs(res.data.job))
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    getAllJobs()
+  }, [dispatch])
+
+  const handleSelect = (job)=>{
+    dispatch(setSelectedJob(job))
+    navigate('/user-layout/detail-job')
+  }
 
   let cheak = false;
-  if(props.Name === 'Student'){
+  if (props.Name === 'Student') {
     cheak = true;
   }
-   
+
   return (
     <>
       <div className="content">
@@ -33,27 +63,40 @@ function TablesOp(props) {
                   <thead className="text-primary">
                     <tr>
                       <th>Company Name</th>
-                      <th>Requirment</th>
-                      <th>Graduation cgpa</th>
+                      <th>Position</th>
+                      <th>Min. cgpa</th>
                       <th>Pakage</th>
 
-                      <th className="text-right">Action</th>
+                      <th className="text-end ">Action</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
-                      <td>flipcart</td>
-                      <td>frontend developer</td>
-                      <td>6</td>
-                      <td>6lpa</td>
-                      <td className="text-right">
-                      {cheak === true ? (
-                        <button className="mx-1 border-success rounded" >Apply</button>
-                     
-                      ): ('')}
-                      <button className="mx-1 border-success rounded">View</button>
-                      </td>
-                    </tr>
+                    {
+                      jobs?.map((job, key) => {
+                        return (
+                          <tr key={key}>
+                            <td>{job?.company?.name}</td>
+                            <td>{job?.title}</td>
+                            <td>{job?.cgpa}</td>
+                            <td>{job?.salary}</td>
+                            <td className="text-end">
+                             
+                                <Button onClick={()=>{
+                                  dispatch(setSelectedJob(job))
+                                 user?.role === 'student' ? 
+                                  navigate('/user-layout/detail-job'):
+                                  navigate('/admin/detail-job')
+                                }} color="primary"
+>
+                                   Detail
+                                </Button>
+
+                           
+                            </td>
+                          </tr>
+                        )
+                      })
+                    }
 
                   </tbody>
                 </Table>
