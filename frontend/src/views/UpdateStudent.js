@@ -27,9 +27,9 @@ function UpdateStudent(props) {
  
   const {user}  = useSelector(store=>store.user)
   const dispatch = useDispatch()
-  const [resume , setResume] = useState();
 
-  const [formData, setFormData] = useState({
+
+  const [data, setData] = useState({
  fullname:user?.fullname,
         phoneNo:user?.phoneNo,
         branch: '',
@@ -37,24 +37,45 @@ function UpdateStudent(props) {
         address: '',
         semister: '',
         skills: '',
+        resume:''
   });
 
 
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
+    setData({
+      ...data,
       [name]: value
     });
   };
+  const handleFileChange = (e)=>{
+    const resume = e.target.files?.[0];
+    setData({
+          ...data,
+          resume
+
+    })
+  }
 
   const handleSubmit = async(e) => {
     e.preventDefault();
+    const formData = new FormData()
+    formData.append('fullname', data.fullname)
+    formData.append('phoneNo', data.phoneNo)
+    formData.append('branch', data.branch)
+    formData.append('cgpa', data.cgpa)
+    formData.append('address', data.address)
+    formData.append('semister', data.semister)
+    formData.append('skills', data.skills)
+    if(data.resume){
+      formData.append('file', data.resume)
+    }
+    
     try {
       const res = await axios.post(`${userApi}/update/student`, formData , {
         headers:{
-          'Content-Type':'application/json'
+         "Content-Type":"multipart/form-data"
         },
         withCredentials:true
       })
@@ -88,7 +109,7 @@ function UpdateStudent(props) {
                   name="fullname"
                   id="fullname"
                   placeholder="Enter your full name"
-                  value={formData.fullname}
+                  value={data.fullname}
                   onChange={handleChange}
                   required
                 />
@@ -100,7 +121,7 @@ function UpdateStudent(props) {
                   name="address"
                   id="address"
                   placeholder="Enter your Local Address"
-                  value={formData.address}
+                  value={data.address}
                   onChange={handleChange}
                   required
                 />
@@ -112,7 +133,7 @@ function UpdateStudent(props) {
                   name="branch"
                   id="branch"
                   placeholder="Branch"
-                  value={formData.branch}
+                  value={data.branch}
                   onChange={handleChange}
                   required
                 />
@@ -125,7 +146,7 @@ function UpdateStudent(props) {
                   name="semister"
                   id="semister"
                   placeholder="current semister"
-                  value={formData.semister}
+                  value={data.semister}
                   onChange={handleChange}
                   required
                 />
@@ -137,7 +158,7 @@ function UpdateStudent(props) {
                   name="cgpa"
                   id="cgpa"
                   placeholder="current cgpa"
-                  value={formData.cgpa}
+                  value={data.cgpa}
                   onChange={handleChange}
                   required
                 />
@@ -150,7 +171,7 @@ function UpdateStudent(props) {
                   name="phoneNo"
                   id="phoneNo"
                   placeholder="Phone Number"
-                  value={formData.phoneNo}
+                  value={data.phoneNo}
                   onChange={handleChange}
                   required
                 />
@@ -163,24 +184,23 @@ function UpdateStudent(props) {
                   name="skills"
                   id="skills"
                   placeholder="HTML , CSS ,..."
-                  value={formData.skills}
+                  value={data.skills}
                   onChange={handleChange}
                   required
                 /> 
               </FormGroup>
            
-              {/* <FormGroup>
+              <FormGroup>
                 <Label for="resume">Uplode your Resume</Label>
                 <Input
                   type="file"
                   name="resume"
-                  id="resume"
-                  
-                  value={resume}
-                  onChange={(e)=>setResume(e.target.value)}
+                  id="resume" 
+                   accept="application/pdf"
+                  onChange={handleFileChange}
                   required
                 /> 
-              </FormGroup> */}
+              </FormGroup>
               
               <Button type="submit" color="primary"> Update Profile</Button>
             </CardBody>

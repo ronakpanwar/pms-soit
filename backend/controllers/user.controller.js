@@ -1,6 +1,8 @@
 const User = require("../models/user.model");
 const bcrypt = require('bcryptjs')
-const jwt = require('jsonwebtoken')
+const jwt = require('jsonwebtoken');
+const getDataUri = require("../utils/datauri");
+const cloudinary = require('../utils/cloudinary')
 
 
 const register = async(req,res)=>{
@@ -195,6 +197,8 @@ const addAdmin = async(req,res)=>{
     }
 }
 
+
+  
 const deleteUser = async(req,res)=>{
     try {
         const userId = req.params.id;
@@ -247,56 +251,99 @@ const getAllAdmins = async(req,res)=>{
     }
 }
 
-const updateProfile = async(req,res)=>{
-    try {
-        const {fullname , phoneNo , branch , address , skills , semister, cgpa } = req.body;
-       
-        let skillsArray;
-        if(skills){
-            skillsArray = skills.split(",");
-        }
-        const userId = req.id
-        let user = await User.findById(userId);
-        if(!user){
-            return res.status(400).json({
-                message:"User not found.",
+    const updateProfile = async(req,res)=>{
+        try {
+            const {fullname , phoneNo , branch , address , skills , semister, cgpa } = req.body;
+        
+            let skillsArray;
+            if(skills){
+                skillsArray = skills.split(",");
+            }
+
+            const file = req.file;
+            const fileUrl = getDataUri(file)
+            const cloudresponse = await cloudinary.uploader.upload(fileUrl.content)
+
+            const userId = req.id
+            let user = await User.findById(userId);
+            if(!user){
+                return res.status(400).json({
+                    message:"User not found.",
+                    success:false
+                })
+            }
+
+            if(fullname)user.fullname = fullname
+            if(phoneNo)user.phoneNo = phoneNo
+            if(branch)user.profile.branch = branch
+            if(address)user.profile.address = address
+            if(skills)user.profile.skills = skillsArray
+            if(semister)user.profile.semister = semister
+            if(cgpa)user.profile.cgpa = cgpa
+            if(cloudresponse){
+                user.profile.resume = cloudresponse.secure_url;
+                user.profile.resumeName = file.originalname
+            }
+
+            await user.save();
+        
+            user = {
+                _id:user._id,
+                fullname:user.fullname,
+                email:user.email,
+                phoneNo:user.phoneNo,
+                role:user.role,
+                gender:user.gender,
+                profile:user.profile
+            };
+
+            return res.status(201).json({
+                success:true,
+                message:"Profile update succesfully...",
+                user
+            })
+            
+        } catch (error) {
+            return res.status(500).json({
+                message : error,
                 success:false
             })
         }
-
-        if(fullname)user.fullname = fullname
-        if(phoneNo)user.phoneNo = phoneNo
-        if(branch)user.profile.branch = branch
-        if(address)user.profile.address = address
-        if(skills)user.profile.skills = skillsArray
-        if(semister)user.profile.semister = semister
-        if(cgpa)user.profile.cgpa = cgpa
-
-        await user.save();
-       
-        user = {
-            _id:user._id,
-            fullname:user.fullname,
-            email:user.email,
-            phoneNo:user.phoneNo,
-            role:user.role,
-            gender:user.gender,
-            profile:user.profile
-        };
-
-        return res.status(201).json({
-            success:true,
-            message:"Profile update succesfully...",
-            user
-        })
-        
-    } catch (error) {
-        return res.status(500).json({
-            message : error,
-            success:false
-        })
     }
+
+const updateImage = async(req,res)=>{
+        try {
+            const id = req.id;
+            const file = req.file;
+            const fileUrl = getDataUri(file)
+            const cloudresponse = await cloudinary.uploader.upload(fileUrl.content)
+
+            let user = await User.findById(id);
+            if (!user) {
+                return res.status(404).json({
+                  success: false,
+                  message: 'User not found',
+                });
+              }
+            
+            user.profile.profileImg = cloudresponse.secure_url;
+             
+            await user.save();
+
+            return res.status(200).json({
+                user ,
+                success:true ,
+                message:'Image upload succesfully...'
+            })
+            
+        } catch (error) {
+            return res.status(500).json({
+                message : error,
+                success:false
+            })
+        }
 }
+
 
 const logOut = async(req,res)=>{
     try {
@@ -320,5 +367,6 @@ module.exports = {
     deleteUser,
     getAllAdmins,
     getAllStudent,
-    updateProfile
+    updateProfile,
+    updateImage
 }

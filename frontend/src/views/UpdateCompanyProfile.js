@@ -15,6 +15,7 @@ import {
     Row,
     Col,
     Label,
+    Spinner,
 } from "reactstrap";
 import { useDispatch, useSelector } from 'react-redux';
 import { toast } from 'sonner';
@@ -29,30 +30,49 @@ function UpdateCompanyProfile(props) {
     const { company } = useSelector(store => store.company)
     const dispatch = useDispatch()
 
-
-    const [formData, setFormData] = useState({
+    const [loading, setLoading] = useState(false)
+    const [data, setData] = useState({
         name: company?.name,
-        about: '',
-        address: "",
-        website: ""
+        about: company?.about || '',
+        address: company?.address || '',
+        website: company?.website || '',
+        logo: ""
     });
 
 
 
     const handleChange = (e) => {
         const { name, value } = e.target;
-        setFormData({
-            ...formData,
+        setData({
+            ...data,
             [name]: value
         });
     };
 
+    const handleLogoChange = (e) => {
+        const logo = e.target.files?.[0];
+        setData({
+            ...data,
+            logo
+        })
+    }
+
     const handleSubmit = async (e) => {
         e.preventDefault();
+        const formData = new FormData();
+        formData.append('name', data.name);
+        formData.append('about', data.about);
+        formData.append('address', data.address);
+        formData.append('website', data.website);
+        if (data.logo) {
+            formData.append('file', data.logo);
+        }
+
         try {
+            setLoading(true)
             const res = await axios.post(`${companyApi}/update`, formData, {
                 headers: {
-                    'Content-Type': 'application/json'
+                    "Content-Type": "multipart/form-data"
                 },
                 withCredentials: true
             })
@@ -63,6 +83,8 @@ function UpdateCompanyProfile(props) {
 
         } catch (error) {
             toast.error(error.response?.data?.message)
+        } finally {
+            setLoading(false)
         }
 
     };
@@ -86,7 +108,7 @@ function UpdateCompanyProfile(props) {
                                     name="about"
                                     id="about"
                                     placeholder="Enter about your company"
-                                    value={formData.about}
+                                    value={data.about}
                                     onChange={handleChange}
                                     required
                                 />
@@ -98,7 +120,7 @@ function UpdateCompanyProfile(props) {
                                     name="address"
                                     id="address"
                                     placeholder="Enter your Local Address"
-                                    value={formData.address}
+                                    value={data.address}
                                     onChange={handleChange}
                                     required
                                 />
@@ -113,7 +135,7 @@ function UpdateCompanyProfile(props) {
                                     name="website"
                                     id="website"
                                     placeholder="website"
-                                    value={formData.website}
+                                    value={data.website}
                                     onChange={handleChange}
                                     required
                                 />
@@ -121,20 +143,29 @@ function UpdateCompanyProfile(props) {
 
 
 
-                            {/* <FormGroup>
-                <Label for="resume">Uplode your Resume</Label>
-                <Input
-                  type="file"
-                  name="resume"
-                  id="resume"
-                  
-                  value={resume}
-                  onChange={(e)=>setResume(e.target.value)}
-                  required
-                /> 
-              </FormGroup> */}
+                            <FormGroup>
+                                <Label for="logo">Uplode your Company Logo</Label>
+                                <Input
+                                    type="file"
+                                    name="logo"
+                                    id="logo"
+                                    accept='image/*'
+                                    onChange={handleLogoChange}
+                                    required
+                                />
+                            </FormGroup>
 
-                            <Button type="submit" color="primary"> Update Profile</Button>
+
+                            <div className=" ">{
+                                loading ? (
+                                    <Button type="submit" color="primary" className=" py-2 mt-3">
+                                        <div className="spinner-border spinner-border-sm" role="status" style={{ width: '1rem', height: '1rem' }}>
+                                            <span className="visually-hidden">Loading...</span>
+                                        </div>
+                                    </Button>
+
+                                ) : (<Button type="submit" color="primary" className=" py-2 mt-3">Update profile</Button>)
+                            } </div>
                         </CardBody>
                     </Card>
                 </Col>

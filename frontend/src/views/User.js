@@ -16,27 +16,42 @@ import {
   Row,
   Col,
 } from "reactstrap";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { userApi } from '../utils/utils';
+import axios from "axios";
+import { toast } from "sonner";
+import { setUser } from "../redux/userSlice";
 
 function User(props) {
 
   const context = useContext(noteContext);
-
+  
   const { user } = useSelector(store => store.user)
+   const dispatch = useDispatch();
+ 
 
-  const [image, setImage] = useState(userImage);
-
-  const handleImageChange = (e) => {
+  const handleImageChange = async(e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
-
-    reader.onloadend = () => {
-      setImage(reader.result);
-    };
-
-    if (file) {
-      reader.readAsDataURL(file);
+    if(file){
+      const formData = new FormData();
+      formData.append('file',file)
+      try {
+        const res = await axios.post(`${userApi}/update/student/image` , formData , {
+          headers:{
+            "Content-Type":"multipart/form-data"
+          }, 
+          withCredentials:true
+        })
+        if(res.data.success){
+          toast.success(res.data.message);
+          dispatch(setUser( res.data.user))
+        }
+      } catch (error) {
+        toast.error(error.response?.data?.message)
+      }
     }
+
+
   };
   return (
     <>
@@ -47,9 +62,10 @@ function User(props) {
 
             <Card className="card-user">
               <CardBody className="" style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
-                <img src={image} alt="" className="m-2 " style={{ width: '180px', height: '180px', border: '2px solid black', borderRadius: '50%' }} />
+
+                <img src={user?.profile?.profileImg ? user?.profile?.profileImg : userImage} alt="" className="m-2 " style={{ width: '180px', height: '180px', border: '2px solid black', borderRadius: '50%' ,objectFit: 'cover'}} />
                 <label htmlFor="upload" className="btn btn-primary" >Set Image</label>
-                <input id="upload" type="file" onChange={handleImageChange} style={{ display: 'none' }} />
+                <input id="upload" type="file"  accept="image/*" onChange={handleImageChange} style={{ display: 'none' }} />
               </CardBody>
 
               <CardHeader>
@@ -162,7 +178,7 @@ function User(props) {
                   </Row>
                   <Row >
                     <Col md="4" >
-                      <button className="btn btn-success" >Cheak resume</button>
+                      <a href={user?.profile?.resume} className="mx-4">  Cheak resume </a>
                     </Col>
                   </Row>
                   <Row className="my-4">

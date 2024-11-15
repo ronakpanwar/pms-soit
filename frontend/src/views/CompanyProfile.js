@@ -1,6 +1,6 @@
 import React, { useContext, useState } from "react";
 import NoteContext from "context/notes/noteContext";
-
+import userImage from 'user.png';
 // reactstrap components
 import {
   Button,
@@ -21,8 +21,8 @@ function CompanyProfile(props) {
 
   const state = useContext(NoteContext)
 
-  const {company}  = useSelector(store=>store.company)
-  
+  const { company } = useSelector(store => store.company)
+
 
   return (
     <>
@@ -32,7 +32,11 @@ function CompanyProfile(props) {
           <Col md="12" >
 
             <Card className="card-user">
-             
+              <CardBody className="" style={{ alignItems: 'center', display: 'flex', flexDirection: 'column' }}>
+
+                <img src={company?.Logo ? company.Logo : userImage} alt="" className="m-2 " style={{ width: '150px', height: '150px', border: '2px solid black', borderRadius: '50%', objectFit: 'cover' }} />
+          
+              </CardBody>
 
               <CardBody>
                 <Form>
@@ -49,9 +53,9 @@ function CompanyProfile(props) {
                         <p>{company?.website}</p>
                       </FormGroup>
                     </Col>
-                  
+
                   </Row>
-               
+
                   <Row>
                     <Col md="12" className="m-4">
                       <FormGroup>
@@ -82,9 +86,9 @@ function CompanyProfile(props) {
                       </FormGroup>
                     </Col>
                   </Row>
-                 
-                 
-              
+
+
+
                 </Form>
               </CardBody>
             </Card>
