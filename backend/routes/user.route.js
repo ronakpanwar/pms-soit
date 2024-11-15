@@ -14,4 +14,5 @@ router.get('/get/admin' ,Authentication , isAutherized(['admin']), getAllAdmins)
 router.get('/get/student' ,Authentication , isAutherized(['admin']), getAllStudent)
 router.post('/update/student' ,Authentication , isAutherized(['student']), updateProfile)
 
+
 module.exports = router

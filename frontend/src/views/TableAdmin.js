@@ -35,7 +35,7 @@ function TableAdmin() {
         if (!confirmDelete) return;
     
         try {
-            const res = await axios.post(`${userApi}/delete/${id}`, {
+            const res = await axios.post(`${userApi}/delete/${id}`,{}, {
                withCredentials:true
             });
     

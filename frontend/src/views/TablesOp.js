@@ -56,7 +56,7 @@ function TablesOp(props) {
           <Col md="12">
             <Card>
               <CardHeader>
-                <CardTitle tag="h4">Opnings</CardTitle>
+                <CardTitle tag="h4">Openings</CardTitle>
               </CardHeader>
               <CardBody>
                 <Table responsive>

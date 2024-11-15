@@ -29,7 +29,7 @@ import { setCompany } from '../redux/companySlice';
 const Login = (props) => {
 
 
-   const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [loading, setLoading] = useState(false)
   let navigate = useNavigate();
   const context = useContext(noteContext);
@@ -75,7 +75,7 @@ const Login = (props) => {
         }
       }
       catch (error) {
-        toast.error(error.response.data.message)   
+        toast.error(error.response.data.message)
         console.log(error)
       } finally {
         setLoading(false)
@@ -98,7 +98,7 @@ const Login = (props) => {
         }
       }
       catch (error) {
-        toast.error(error.response.data.message)   
+        toast.error(error.response.data.message)
         console.log(error)
       } finally {
         setLoading(false)
@@ -115,9 +115,9 @@ const Login = (props) => {
           <Col md="6" lg="4">
 
             <Card className="card-user bg-light shadow-sm">
-            
+
               <CardBody className="p-4">
-              <p className="fw-bold text-center bg-dark text-white px-2 py-2 fs-6">Sign In to Your Account</p>
+                <p className="fw-bold text-center bg-dark text-white px-2 py-2 fs-6">Sign In to Your Account</p>
                 <FormGroup>
                   <Label for="type"></Label>
                   <Input
@@ -126,7 +126,7 @@ const Login = (props) => {
                     id="type"
                     placeholder="Admin"
                     value={type}
-                    onChange={(e)=>setType(e.target.value)}
+                    onChange={(e) => setType(e.target.value)}
                     required
                   >
                     <option value="">Type</option>
@@ -165,9 +165,12 @@ const Login = (props) => {
 
                 <div className="text-center ">{
                   loading ? (
-                    <div class="spinner-border " role="status">
-                      <span class="visually-hidden">Loading...</span>
-                    </div>
+                    <Button type="submit" color="primary" className="w-100 py-2 mt-3">
+                      <div className="spinner-border spinner-border-sm" role="status" style={{ width: '1rem', height: '1rem' }}>
+                        <span className="visually-hidden">Loading...</span>
+                      </div>
+                    </Button>
+
                   ) : (<Button type="submit" color="primary" className="w-100 py-2 mt-3">Login</Button>)
                 }
 
