@@ -45,7 +45,7 @@ function Applications() {
                           
                           <Button className="rounded px-2" onClick={()=>{
                             navigate(`/company-layout/applicant-detail/${job?._id}`)
-                          }}><a className="text-decoration-none text-white" href="#"><span className="px-1 text-primary fs-6">{job?.applications?.length}</span> Applicant</a></Button>
+                          }}><a className="text-decoration-none text-white" href=""><span className="px-1 text-primary fs-6">{job?.applications?.length}</span> Applicant</a></Button>
                         </td>
                       </tr>
                       )

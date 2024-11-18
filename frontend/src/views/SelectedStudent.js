@@ -8,23 +8,8 @@ import { setAllSelected } from '../redux/userSlice';
 const SelectedStudent = () => {
 
    const {allSelected }  = useSelector(store=>store.user);
-   const dispatch = useDispatch()
 
-   useEffect(()=>{
-    const getAll = async()=>{
-      try {
-        const res = await axios.get(`${applicationApi}/all`, {
-          withCredentials:true
-        })
-        if(res.data.success){
-          dispatch(setAllSelected(res.data.applicants))
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    getAll()
-   }, [dispatch])
+
 
   return (
        

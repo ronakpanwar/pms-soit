@@ -1,14 +1,16 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { applicationApi } from "../utils/utils";
 
 import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button, Badge } from "reactstrap";
 import { setApplicants } from "../redux/companySlice";
 import { toast } from "sonner";
+import userImage from 'user.png';
 
 function ApplicationsDetail() {
+    const navigate = useNavigate();
     const [status, setStatus] = useState()
     const params = useParams()
     const jobId = params.id;
@@ -17,6 +19,9 @@ function ApplicationsDetail() {
     const color = {
         accepted:'success',
         rejected:'danger'
+    }
+    const handleBack = ()=>{
+        navigate(-1);
     }
 
     useEffect(() => {
@@ -63,13 +68,15 @@ function ApplicationsDetail() {
                 <Row>
                     <Col md="12">
                         <Card>
-                            <CardHeader>
+                            <CardHeader> 
+                            <p className="mx-2 fs-5 " onClick={handleBack} style={{ cursor:'pointer'}}><i class="fa-solid fa-arrow-left"></i> </p>
                                 <CardTitle tag="h4"> Applicant</CardTitle>
                             </CardHeader>
                             <CardBody>
                                 <Table responsive>
                                     <thead className="text-primary">
                                         <tr>
+                                        <th>Photo</th>
                                             <th>Name</th>
                                             <th>Email</th>
                                             <th>Branch</th>
@@ -83,6 +90,7 @@ function ApplicationsDetail() {
                                         {applicants?.map((job, key) => {
                                             return (
                                                 <tr key={key}>
+                                                <td><img className='' src={job?.applicant?.profile?.profileImg ? (job?.applicant?.profile?.profileImg):(userImage)} alt=""  style={{ width: '45px', height: '45px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} /></td>
                                                     <td>{job?.applicant?.fullname}</td>
                                                     <td>{job?.applicant?.email}</td>
                                                     <td>{job?.applicant?.profile?.branch}</td>

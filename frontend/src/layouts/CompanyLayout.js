@@ -9,7 +9,7 @@ import Applications from "views/Applications.js";
 import SelectedStudent from "views/SelectedStudent.js";
 import UpdatePassword from "views/UpdatePassword.js";
 import DemoNavbar from "components/Navbars/DemoNavbar.js";
-
+import userImage from 'user.png';
 // import DemoNavbar from "components/Navbars/DemoNavbar.js";
 // import Footer from "components/Footer/Footer.js";
 import Sidebar from "../components/Sidebar/Sidebar.js";
@@ -37,6 +37,7 @@ function Dashboard(props) {
   const location = useLocation();
   const state = "/company-layout/company-profile";
   const Name = company?.name;
+  const Image = company?.Logo || userImage
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(mainPanel.current);
@@ -53,12 +54,7 @@ function Dashboard(props) {
     mainPanel.current.scrollTop = 0;
     document.scrollingElement.scrollTop = 0;
   }, [location]);
-  const handleActiveClick = (color) => {
-    setActiveColor(color);
-  };
-  const handleBgClick = (color) => {
-    setBackgroundColor(color);
-  };
+
 
   return (
     
@@ -66,7 +62,7 @@ function Dashboard(props) {
       <DemoNavbar/>
       <Sidebar
         {...props}
-        
+        Image = {Image}
         state = {state}
         Name = {Name}
         routes={croutes}

@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import axios from "axios";
 import { toast } from "sonner";
 import { setAdmins, setAllSelected, setAppliedJobs, setCompanys, setJobs, setSelectedJob, setStudents, setUser } from "../../redux/userSlice";
-import { userApi , companyApi } from "../../utils/utils";
+import { userApi, companyApi } from "../../utils/utils";
 import { setApplicants, setCompany, setCompanyJobs } from "../../redux/companySlice";
 
 
@@ -18,19 +18,19 @@ var ps;
 
 function Sidebar(props) {
 
-const navigate = useNavigate();
- 
-// function handleLogout() {
-//   // Perform any logout logic here
-//   // For example, clear user session, etc.
-  
-//   // Navigate to the home page
-//   navigate('/');
-// }
-const {user} = useSelector(store=>store.user)
-const {company} = useSelector(store=>store.company)
-const dispatch = useDispatch()
-  
+  const navigate = useNavigate();
+
+  // function handleLogout() {
+  //   // Perform any logout logic here
+  //   // For example, clear user session, etc.
+
+  //   // Navigate to the home page
+  //   navigate('/');
+  // }
+  const { user } = useSelector(store => store.user)
+  const { company } = useSelector(store => store.company)
+  const dispatch = useDispatch()
+
   const location = useLocation();
   const sidebar = React.useRef();
   // verifies if routeName is the one active (in browser input)
@@ -51,43 +51,43 @@ const dispatch = useDispatch()
     };
   }, [location]); // Add location as a dependency
 
-  const handleLogout = async()=>{
-       if(user !== null){
-        try {
-          const res =await axios.post(`${userApi}/logout`, {}, {
-            withCredentials:true
-          })
-           if(res.data.success){
-            toast.success(res.data.message);
-            dispatch(setUser(null))
-            dispatch(setAdmins([]))
-            dispatch(setCompanys([]))
-            dispatch(setStudents([]))
-            dispatch(setJobs([]))
-            dispatch(setAppliedJobs([]))
-            dispatch(setSelectedJob(null))
-            dispatch(setAllSelected([]))
-           }
-        } catch (error) {
-          toast.error(error.response.data.message)
-          console.log(error)
+  const handleLogout = async () => {
+    if (user !== null) {
+      try {
+        const res = await axios.post(`${userApi}/logout`, {}, {
+          withCredentials: true
+        })
+        if (res.data.success) {
+          toast.success(res.data.message);
+          dispatch(setUser(null))
+          dispatch(setAdmins([]))
+          dispatch(setCompanys([]))
+          dispatch(setStudents([]))
+          dispatch(setJobs([]))
+          dispatch(setAppliedJobs([]))
+          dispatch(setSelectedJob(null))
+          dispatch(setAllSelected([]))
         }
-       }else if( company !== null){
-        try {
-          const res =await axios.post(`${companyApi}/logout`,{} ,{
-            withCredentials:true
-          })
-           if(res.data.success){
-            toast.success(res.data.message);
-            dispatch(setCompany(null))
-            dispatch(setCompanyJobs([]))
-            dispatch(setApplicants([]))
-           }
-        } catch (error) {
-          toast.error(error.response?.data?.message)
-          console.log(error)
+      } catch (error) {
+        toast.error(error.response.data.message)
+        console.log(error)
+      }
+    } else if (company !== null) {
+      try {
+        const res = await axios.post(`${companyApi}/logout`, {}, {
+          withCredentials: true
+        })
+        if (res.data.success) {
+          toast.success(res.data.message);
+          dispatch(setCompany(null))
+          dispatch(setCompanyJobs([]))
+          dispatch(setApplicants([]))
         }
-       }
+      } catch (error) {
+        toast.error(error.response?.data?.message)
+        console.log(error)
+      }
+    }
   }
 
   return (
@@ -96,18 +96,18 @@ const dispatch = useDispatch()
       data-color={props.bgColor}
       data-active-color={props.activeColor}
     >
-      <div className="logo">
+      <div className="logo ">
         <a
           href="#"
           className="simple-text logo-mini"
         >
-          <div className="logo-img">
-            <img src={logo} alt="react-logo" />
+          <div className="">
+            <img  style={{ width: '45px', height: '35px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} src={props.Image} alt="react-logo" />
           </div>
         </a>
         <a
           href={props.state}
-          className="simple-text logo-normal"
+          className="simple-text  logo-normal"
         >
           {props.Name}
         </a>
@@ -115,10 +115,10 @@ const dispatch = useDispatch()
       <div className="sidebar-wrapper" ref={sidebar}>
         <Nav>
           {props.routes.map((prop, key) => {
-          
+
             return (
-            <li
-              className={`${activeRoute(prop.path)} ${prop.pro ? "active-pro" : ""}`}
+              <li
+                className={`${activeRoute(prop.path)} ${prop.pro ? "active-pro" : ""}`}
                 key={key}
               >
                 <NavLink to={prop.layout + prop.path} className="nav-NavLink">
@@ -126,14 +126,14 @@ const dispatch = useDispatch()
                   <p>{prop.name}</p>
                 </NavLink>
               </li>
-              
+
             );
           })}
           <li>
-          <NavLink to="/" className="nav-NavLink" onClick={handleLogout}>
+            <NavLink to="/" className="nav-NavLink" onClick={handleLogout}>
               <i className="fa fa-sign-out" />
               <p>Logout</p>
-          </NavLink>
+            </NavLink>
           </li>
         </Nav>
       </div>

@@ -4,7 +4,7 @@ import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarB
 import { applicationApi } from '../utils/utils';
 import { useDispatch, useSelector } from 'react-redux';
 import { setAppliedJobs } from '../redux/userSlice';
-
+import userImage from 'user.png';
 const AppliedStudent = () => {
 
   const dispatch = useDispatch()
@@ -67,7 +67,7 @@ const AppliedStudent = () => {
                     appliedJobs?.map((job, key) => {
                       return (
                         <tr key={key}>
-                          <td>{job?.job?.company?.name}</td>
+                          <td><img className='' src={job?.job?.company?.Logo ? (job?.job?.company?.Logo):(userImage)} alt=""  style={{ width: '40px', height: '40px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} /> {job?.job?.company?.name}</td>
                           <td>{job?.job?.title}</td>
                           <td>{job?.job?.position}</td>
                           <td>{job?.job?.salary}</td>

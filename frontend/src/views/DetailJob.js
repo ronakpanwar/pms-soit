@@ -4,9 +4,11 @@ import { useSelector } from 'react-redux';
 import { Button, Badge, Card, CardBody } from 'reactstrap';
 import { applicationApi } from '../utils/utils';
 import { toast } from 'sonner';
+import { useNavigate } from 'react-router-dom';
 
 
   const DetailJob = () => {
+    const navigate = useNavigate();
     const { selectedJob ,user } = useSelector(store => store.user);
     const jobId = selectedJob?._id
 
@@ -23,13 +25,19 @@ import { toast } from 'sonner';
         }
     }
     
+    const handleBack = ()=>{
+      navigate(-1);
+  }
+
     
   
     return (
         <div className="content ">
         {/* Job Card with cleaner layout */}
         <Card className="shadow-sm border-0 rounded-lg bg-white">
+      
           <CardBody>
+          <p className="mx-2 fs-5 " onClick={handleBack} style={{ cursor:'pointer'}}><i class="fa-solid fa-arrow-left"></i> </p>
             {/* Job Title and Badges */}
             {/* <div className="d-flex justify-content-between align-items-center mb-4">
              

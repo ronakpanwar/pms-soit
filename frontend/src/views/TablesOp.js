@@ -1,5 +1,6 @@
 import axios from 'axios';
 import React, { useEffect } from 'react'
+import userImage from 'user.png';
 import { useDispatch, useSelector } from 'react-redux';
 // reactstrap components
 import {
@@ -62,6 +63,7 @@ function TablesOp(props) {
                 <Table responsive>
                   <thead className="text-primary">
                     <tr>
+                  
                       <th>Company Name</th>
                       <th>Position</th>
                       <th>Min. cgpa</th>
@@ -75,7 +77,8 @@ function TablesOp(props) {
                       jobs?.map((job, key) => {
                         return (
                           <tr key={key}>
-                            <td>{job?.company?.name}</td>
+                         
+                            <td><img className='' src={job?.company?.Logo ? (job?.company?.Logo):(userImage)} alt=""  style={{ width: '40px', height: '40px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} /> {job?.company?.name}</td>
                             <td>{job?.title}</td>
                             <td>{job?.cgpa}</td>
                             <td>{job?.salary}</td>

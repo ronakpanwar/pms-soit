@@ -12,14 +12,16 @@ import {
   Row,
   Col,
 } from "reactstrap";
+import { useSelector } from "react-redux";
 // core components
 
 
 function Dashboard() {
   
   const context = useContext(noteContext);
-
-   
+  const {allSelected }  = useSelector(store=>store.user);
+  const {companys} = useSelector(store=>store.user)
+  const {students}  = useSelector(store=>store.user)
 
 
 
@@ -39,7 +41,7 @@ function Dashboard() {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Students</p>
-                    <CardTitle tag="p">{context.sL}</CardTitle>
+                    <CardTitle tag="p">{students.length}</CardTitle>
                       <p />
                     </div>
                   </Col>
@@ -66,7 +68,7 @@ function Dashboard() {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Company</p>
-                      <CardTitle tag="p">{context.cL}</CardTitle>
+                      <CardTitle tag="p">{companys.length}</CardTitle>
                       <p />
                     </div>
                   </Col>
@@ -92,7 +94,7 @@ function Dashboard() {
                   <Col md="8" xs="7">
                     <div className="numbers">
                       <p className="card-category">Selected Students</p>
-                      <CardTitle tag="p">2</CardTitle>
+                      <CardTitle tag="p">{allSelected.length}</CardTitle>
                       <p />
                     </div>
                   </Col>

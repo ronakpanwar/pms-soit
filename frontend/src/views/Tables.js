@@ -12,21 +12,6 @@ function Tables() {
   const {students}  = useSelector(store=>store.user)
   const dispatch = useDispatch();
 
-  useEffect(()=>{
-    const getStudents = async()=>{
-      try {
-        const res = await axios.get(`${userApi}/get/student`, {
-          withCredentials:true
-        })
-        if(res.data.success){
-          dispatch(setStudents(res.data.students))
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    getStudents()
-  },[dispatch])
 
   return (
 

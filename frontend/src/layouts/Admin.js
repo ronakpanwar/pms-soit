@@ -1,5 +1,5 @@
 
-import React from "react";
+import React, { useEffect } from "react";
 import AddStudent from "../views/AddStudent.js";
 import AddCompany from "views/AddCompany.js";
 // javascript plugin used to create scrollbars on windows
@@ -19,10 +19,15 @@ import Sidebar from "../components/Sidebar/Sidebar.js";
 import NoteContext from "context/notes/noteContext.js";
 import routes from "../routes.js";
 import { useContext } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import TableAdmin from "../views/TableAdmin.js";
 import AddAdmin from "../views/AddAdmin.js";
 import DetailJob from "../views/DetailJob.js";
+import userImage from 'user.png';
+import { setAllSelected, setCompanys, setStudents } from "../redux/userSlice.js";
+import axios from "axios";
+import { companyApi , userApi } from '../utils/utils';
+import { applicationApi } from '../utils/utils';
 
 var ps;
 
@@ -41,6 +46,7 @@ function Dashboard(props) {
   const location = useLocation();
   const state = "/admin/dashboard";
   const Name = user?.fullname;
+  const Image = user?.profile?.profileImg || userImage
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
       ps = new PerfectScrollbar(mainPanel.current);
@@ -63,7 +69,60 @@ function Dashboard(props) {
   if(user?.role !== 'admin' || user === null){
    navigate('/')
   }
+
+
+const dispatch = useDispatch()
+
+useEffect(()=>{
+  const getCompanys = async()=>{
+    try {
+      const res = await axios.get(`${companyApi}/get/all`,{
+        withCredentials:true
+      })
+      if(res.data.success){
+        dispatch(setCompanys(res.data.companys))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  getCompanys()
+},[dispatch])
   
+
+
+useEffect(()=>{
+  const getAll = async()=>{
+    try {
+      const res = await axios.get(`${applicationApi}/all`, {
+        withCredentials:true
+      })
+      if(res.data.success){
+        dispatch(setAllSelected(res.data.applicants))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  getAll()
+ }, [dispatch])
+
+ useEffect(()=>{
+  const getStudents = async()=>{
+    try {
+      const res = await axios.get(`${userApi}/get/student`, {
+        withCredentials:true
+      })
+      if(res.data.success){
+        dispatch(setStudents(res.data.students))
+      }
+    } catch (error) {
+      console.log(error)
+    }
+  }
+  getStudents()
+},[dispatch])
+
   // console.log(admin.Astate.name);
  
 
@@ -74,7 +133,7 @@ function Dashboard(props) {
       <DemoNavbar/> 
       <Sidebar
         {...props}
-       
+        Image= {Image}
         state = {state}
         Name = {Name}
         routes={routes}

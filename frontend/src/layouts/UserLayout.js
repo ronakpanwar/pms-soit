@@ -12,7 +12,7 @@ import DemoNavbar from "components/Navbars/DemoNavbar.js";
 import PerfectScrollbar from "perfect-scrollbar";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 
-
+import userImage from 'user.png';
 import Sidebar from "../components/Sidebar/Sidebar.js";
 // import FixedPlugin from "components/FixedPlugin/FixedPlugin.js";
 
@@ -43,6 +43,7 @@ if(user?.role !== 'student' || user === null){
   const [activeColor, setActiveColor] = React.useState("info");
   const state = "/user-layout/profile";
   const Name = user?.fullname;
+  const Image = user?.profile?.profileImg || userImage
   const mainPanel = React.useRef();
   const location = useLocation();
   React.useEffect(() => {
@@ -68,6 +69,7 @@ if(user?.role !== 'student' || user === null){
       <DemoNavbar/>
       <Sidebar
         {...props}
+        Image = {Image}
         state = {state}
         Name = {Name}
         routes={Uroutes}

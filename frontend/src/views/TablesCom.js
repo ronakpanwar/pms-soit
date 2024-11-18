@@ -11,23 +11,7 @@ function TablesCom() {
 
 
   const {companys} = useSelector(store=>store.user)
-  const dispatch = useDispatch()
 
-  useEffect(()=>{
-    const getCompanys = async()=>{
-      try {
-        const res = await axios.get(`${companyApi}/get/all`,{
-          withCredentials:true
-        })
-        if(res.data.success){
-          dispatch(setCompanys(res.data.companys))
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    getCompanys()
-  },[dispatch])
 
   return (
     <>
