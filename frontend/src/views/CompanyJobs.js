@@ -52,32 +52,32 @@ function CompanyJobs() {
                                 <Table responsive>
                                     <thead className="text-primary">
                                         <tr>
-                                            <th className="py-3">Title</th>
-                                            <th className="py-3">Description</th>
-                                            <th className="py-3">Requirements</th>
-                                            <th className="py-3">Package</th>
-                                            <th className="py-3">Location</th>
-                                            <th className="py-3">Position</th>
-                                            <th className="py-3">Min CGPA</th>
-                                            <th className="py-3">Job Type</th>
+                                            <th className="py-3 px-2">Title</th>
+                                            <th className="py-3 px-2">Description</th>
+                                            <th className="py-3 px-2">Requirements</th>
+                                            <th className="py-3 px-2">Package</th>
+                                            <th className="py-3 px-2">Location</th>
+                                            <th className="py-3 px-2">Position</th>
+                                            <th className="py-3 px-2">Min CGPA</th>
+                                            <th className="py-3 px-2">Job Type</th>
                                             
                                         </tr>
                                     </thead>
                                     <tbody  >
                                         {companyJobs?.map((company, index) => (
                                             <tr key={index} className="align-middle">
-                                                <td className="py-2 px-4">{company?.title}</td>
-                                                <td className="py-2 px-4">{company?.description}</td>
-                                                <td className="py-2 px-4">
+                                                <td className="py-2 px-2">{company?.title}</td>
+                                                <td className="py-2 px-2">{company?.description}</td>
+                                                <td className="py-2 px-2">
                                                     {company?.requirments.map((req, idx) => (
                                                         <span key={idx}>{req} , </span> // Add key to avoid React warning about missing keys
                                                     ))}
                                                 </td>
-                                                <td className="py-2 px-4">{company?.salary}</td>
-                                                <td className="py-2 px-4">{company?.location}</td>
-                                                <td className="py-2 px-4">{company?.position}</td>
-                                                <td className="py-2 px-4">{company?.cgpa}</td>
-                                                <td className="py-2  px-4">{company?.jobType}</td>
+                                                <td className="py-2 px-2">{company?.salary}</td>
+                                                <td className="py-2 px-2">{company?.location}</td>
+                                                <td className="py-2 px-2">{company?.position}</td>
+                                                <td className="py-2 px-2">{company?.cgpa}</td>
+                                                <td className="py-2  px-2">{company?.jobType}</td>
                                                
                                             </tr>
                                         ))}

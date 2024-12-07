@@ -38,7 +38,7 @@ const SelectedStudent = () => {
                   <th>Branch</th>
                   <th>Company Name</th>
                   <th>title</th>
-                  <th>postion</th>
+                  <th>position</th>
                   
                   <th className="text-right">status</th>
                 </tr>

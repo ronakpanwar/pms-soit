@@ -5,6 +5,7 @@ import { Button, Badge, Card, CardBody } from 'reactstrap';
 import { applicationApi } from '../utils/utils';
 import { toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
+import { format } from 'date-fns';
 
 
   const DetailJob = () => {
@@ -54,7 +55,7 @@ import { useNavigate } from 'react-router-dom';
             {/* Job Description Section */}
             <h2 className="font-weight-bold text-dark mb-3 border-bottom pb-2">Job Description</h2>
             <div className="mb-3 d-flex align-items-end gap-3">
-              <h5 className="font-weight-bold">Role:</h5>
+              <h5 className="font-weight-bold">Title:</h5>
               <p className="text-muted ">{selectedJob?.title}</p>
             </div>
             <div className="mb-3 d-flex align-items-end gap-3">
@@ -67,7 +68,7 @@ import { useNavigate } from 'react-router-dom';
             </div>
             <div className="mb-3 d-flex align-items-end gap-3">
               <h5 className="font-weight-bold">Package:</h5>
-              <p className="text-muted">{selectedJob?.salary} LPA</p>
+              <p className="text-muted">{selectedJob?.salary} </p>
             </div>
             <div className="mb-3 d-flex align-items-end gap-3">
               <h5 className="font-weight-bold">Position:</h5>
@@ -91,7 +92,11 @@ import { useNavigate } from 'react-router-dom';
             </div>
             <div className="mb-3 d-flex align-items-end gap-3">
               <h5 className="font-weight-bold">Posted Date:</h5>
-              <p className="text-muted">13-08-24</p>
+              <p className="text-muted">
+                            {selectedJob?.createdAt
+                                ? format(new Date(selectedJob.createdAt), 'dd-MM-yyyy')
+                                : 'Not available'}
+                        </p>
             </div>{
               user?.role === 'student'? (
                 <div className='text-end mx-4'>

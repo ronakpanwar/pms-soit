@@ -20,7 +20,7 @@ var routes = [
     {
     path: "/update-student",
     name: "Update Profile",
-    icon: "nc-icon nc-single-02",
+    icon: "fa-solid fa-pen-to-square",
     component: <UpdateStudent />,
     layout: "/user-layout",
   },

@@ -66,7 +66,12 @@ if(user?.role !== 'student' || user === null){
   return (
     
     <div className="wrapper ">
-      <DemoNavbar/>
+     
+     <DemoNavbar
+       Image= {Image}
+       state = {state}
+       Name = {Name}
+        /> 
       <Sidebar
         {...props}
         Image = {Image}

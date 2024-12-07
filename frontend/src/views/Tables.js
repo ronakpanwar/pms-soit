@@ -1,5 +1,5 @@
 
-import React ,{useContext, useEffect} from "react";
+import React ,{useContext, useEffect, useState} from "react";
 import NoteContext from "context/notes/noteContext";
 import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button } from "reactstrap";
 import { useDispatch, useSelector } from "react-redux";
@@ -11,7 +11,18 @@ function Tables() {
  
   const {students}  = useSelector(store=>store.user)
   const dispatch = useDispatch();
+  const [serachName , setSearchName] = useState()
+  const [filterS , setFilterS] = useState(students)
 
+  useEffect(() => {
+    const filterData =
+        serachName && students.length > 0
+            ? students.filter((student) =>
+                  student?.fullname?.toLowerCase().includes(serachName.toLowerCase())
+              )
+            : students; 
+    setFilterS(filterData);
+}, [serachName,students]);
 
   return (
 
@@ -21,7 +32,13 @@ function Tables() {
      
         <div className="content ">
           <Navbar className="px-4" color="dark" light expand="md">
-            <NavbarBrand href="#">Placement Management System</NavbarBrand>
+          <div className="rounded w-full mx-2">
+                  <input type="text" 
+                    placeholder="Search the students..."
+                    className="w-full px-3 py-1 "
+                    onChange={(e)=>setSearchName(e.target.value)}
+                   />
+                   </div>
             <Nav className="ms-auto" navbar></Nav>
             <NavItem>
               <a href="/admin/add-student">
@@ -49,7 +66,7 @@ function Tables() {
                       </tr>
                     </thead>
                     <tbody>
-                    {students?.map((student, index) => (
+                    {filterS?.map((student, index) => (
                       <tr key={index}>
                         <td>{student?.fullname}</td>
                         <td>{student?.gender}</td>

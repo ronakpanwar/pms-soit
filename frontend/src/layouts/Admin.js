@@ -46,6 +46,7 @@ function Dashboard(props) {
   const location = useLocation();
   const state = "/admin/dashboard";
   const Name = user?.fullname;
+  const layout = "Admin"
   const Image = user?.profile?.profileImg || userImage
   React.useEffect(() => {
     if (navigator.platform.indexOf("Win") > -1) {
@@ -130,12 +131,18 @@ useEffect(()=>{
     
     <div className="wrapper ">
 
-      <DemoNavbar/> 
+      <DemoNavbar
+       Image= {Image}
+       state = {state}
+       Name = {Name}
+        /> 
+
       <Sidebar
         {...props}
         Image= {Image}
         state = {state}
         Name = {Name}
+        layout = {layout}
         routes={routes}
         bgColor={backgroundColor}
         activeColor={activeColor}

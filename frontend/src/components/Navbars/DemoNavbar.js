@@ -22,6 +22,7 @@ import {
 import routes from "routes.js";
 
 function Header(props) {
+
   const [isOpen, setIsOpen] = React.useState(false);
   const [dropdownOpen, setDropdownOpen] = React.useState(false);
   const [color, setColor] = React.useState("white");
@@ -57,7 +58,7 @@ function Header(props) {
     if (window.innerWidth < 993 && isOpen) {
       setColor("white");
     } else {
-      setColor("dark");
+      setColor("white");
     }
   };
   React.useEffect(() => {
@@ -102,12 +103,21 @@ function Header(props) {
           </div>
           <NavbarBrand href="/">{getBrand()}</NavbarBrand>
         </div>
-        <NavbarToggler onClick={toggle}>
+        {/* <NavbarToggler onClick={toggle}>
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
           <span className="navbar-toggler-bar navbar-kebab" />
-        </NavbarToggler>
-        <Collapse isOpen={isOpen} navbar className="justify-content-end">
+        </NavbarToggler> */}
+
+        <div className="d-flex align-items-center gap-2 mx-5 ">
+        <div className="">
+            <img  style={{ width: '40px', height: '40px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} src={props.Image} alt="react-logo" />
+          </div>
+          <div>
+            <p className="fs-6">{props.Name}</p>
+          </div>
+        </div>
+        {/* <Collapse isOpen={isOpen} navbar className="justify-content-end">
           <form>
             <InputGroup className="no-border">
               <Input placeholder="Search..." />
@@ -153,7 +163,7 @@ function Header(props) {
               </Link>
             </NavItem>
           </Nav>
-        </Collapse>
+        </Collapse> */}
       </Container>
     </Navbar>
   );

@@ -8,6 +8,8 @@ import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarB
 import { setApplicants } from "../redux/companySlice";
 import { toast } from "sonner";
 import userImage from 'user.png';
+import ApplicantCart from "./ApplicantCart";
+
 
 function ApplicationsDetail() {
     const navigate = useNavigate();
@@ -69,12 +71,12 @@ function ApplicationsDetail() {
                     <Col md="12">
                         <Card>
                             <CardHeader> 
-                            <p className="mx-2 fs-5 " onClick={handleBack} style={{ cursor:'pointer'}}><i class="fa-solid fa-arrow-left"></i> </p>
-                                <CardTitle tag="h4"> Applicant</CardTitle>
+                            <p className="mx-4 fs-5 " onClick={handleBack} style={{ cursor:'pointer'}}><i class="fa-solid fa-arrow-left"></i> </p>
+                                <CardTitle tag="h4" className="mx-4"> Applicant</CardTitle>
                             </CardHeader>
                             <CardBody>
                                 <Table responsive>
-                                    <thead className="text-primary">
+                                    {/* <thead className="text-primary">
                                         <tr>
                                         <th>Photo</th>
                                             <th>Name</th>
@@ -85,28 +87,32 @@ function ApplicationsDetail() {
 
                                             <th className="text-end">Action</th>
                                         </tr>
-                                    </thead>
+                                    </thead> */}
                                     <tbody>
                                         {applicants?.map((job, key) => {
                                             return (
-                                                <tr key={key}>
-                                                <td><img className='' src={job?.applicant?.profile?.profileImg ? (job?.applicant?.profile?.profileImg):(userImage)} alt=""  style={{ width: '45px', height: '45px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} /></td>
+                                                <tr key={key} className="border-bottom py-2">
+
+                                                <ApplicantCart data={job?.applicant} status = {job?.status} id = {job?._id}/>
+
+                                                {/* <td><img className='' src={job?.applicant?.profile?.profileImg ? (job?.applicant?.profile?.profileImg):(userImage)} alt=""  style={{ width: '45px', height: '45px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} /></td>
                                                     <td>{job?.applicant?.fullname}</td>
                                                     <td>{job?.applicant?.email}</td>
                                                     <td>{job?.applicant?.profile?.branch}</td>
 
                                                     <td>{job?.applicant?.profile?.cgpa}</td>
-                                                    <td><a href="#">{job?.applicant?.profile?.resumeName}</a></td>
+                                                    <td><a href={job?.applicant?.profile?.resume ? job?.applicant?.profile?.resume : '#'}>{job?.applicant?.profile?.resumeName}</a></td>*/}
 
-                                                    <td className="text-end">
-                                                        {job?.status !== 'pending' ? (
+                                                   
+                                                      <div className="d-flex justify-content-end mx-4 ">
+                                                       {job?.status !== 'pending' ? (
                                                             // If status is not 'pending', don't show the form
                                                            <h6> <Badge color={color[job?.status]} >
                                                                 {job?.status}
                                                             </Badge></h6>
                                                         ) : (
                                                             // If status is 'pending', show the form with buttons
-                                                            <form className="d-flex flex-column gap-1" onSubmit={()=>handleStatus(job?._id)}>
+                                                            <form className="d-flex  gap-4" onSubmit={()=>handleStatus(job?._id)}>
                                                                 <Button
                                                                     type="submit"
                                                                     onClick={() => setStatus('accepted')}
@@ -127,9 +133,9 @@ function ApplicationsDetail() {
                                                                 </Button>
                                                             </form>
                                                         )}
-                                                    </td>
+                                                        </div> 
 
-                                                </tr>
+                                                </tr> 
                                             )
                                         })
 

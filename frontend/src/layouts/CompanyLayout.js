@@ -59,7 +59,12 @@ function Dashboard(props) {
   return (
     
     <div className="wrapper ">
-      <DemoNavbar/>
+      
+      <DemoNavbar
+       Image= {Image}
+       state = {state}
+       Name = {Name}
+        /> 
       <Sidebar
         {...props}
         Image = {Image}

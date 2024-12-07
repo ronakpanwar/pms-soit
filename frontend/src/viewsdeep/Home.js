@@ -3,6 +3,7 @@ import Login from './Login'
 
 import HomeNavbar from './HomeNavbar'
 import HomeContent from './HomeContent'
+import Footer from '../components/Footer/Footer'
 
 const Home = (props) => {
   return (
@@ -11,6 +12,7 @@ const Home = (props) => {
       <div className="container" >
        <HomeContent/>
       </div>
+
     </>
   )
 }

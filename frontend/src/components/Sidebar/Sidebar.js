@@ -12,7 +12,7 @@ import { toast } from "sonner";
 import { setAdmins, setAllSelected, setAppliedJobs, setCompanys, setJobs, setSelectedJob, setStudents, setUser } from "../../redux/userSlice";
 import { userApi, companyApi } from "../../utils/utils";
 import { setApplicants, setCompany, setCompanyJobs } from "../../redux/companySlice";
-
+import clgLogo from 'logoRgpv.png';
 
 var ps;
 
@@ -102,14 +102,14 @@ function Sidebar(props) {
           className="simple-text logo-mini"
         >
           <div className="">
-            <img  style={{ width: '45px', height: '35px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} src={props.Image} alt="react-logo" />
+            <img  style={{ width: '45px', height: '35px', border: '1px solid ', borderRadius: '50%' ,objectFit: 'cover'}} src={clgLogo} alt="react-logo" />
           </div>
         </a>
         <a
           href={props.state}
           className="simple-text  logo-normal"
         >
-          {props.Name}
+          Soit Rgpv
         </a>
       </div>
       <div className="sidebar-wrapper" ref={sidebar}>

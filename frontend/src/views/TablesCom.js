@@ -1,4 +1,4 @@
-import React , {useContext, useEffect} from 'react'
+import React , {useContext, useEffect, useState} from 'react'
 import { Card, CardHeader, CardBody, CardTitle, Table, Row, Col, Navbar, NavbarBrand, Nav, NavItem, NavLink, Button } from "reactstrap";
 import NoteContext from 'context/notes/noteContext';
 import { useDispatch, useSelector } from 'react-redux';
@@ -11,13 +11,30 @@ function TablesCom() {
 
 
   const {companys} = useSelector(store=>store.user)
+  const [serachName , setSearchName] = useState()
+  const [filterC , setFilterC] = useState(companys)
 
+  useEffect(() => {
+    const filterData =
+        serachName && companys.length > 0
+            ? companys.filter((company) =>
+                  company?.name?.toLowerCase().includes(serachName.toLowerCase())
+              )
+            : companys; 
+    setFilterC(filterData);
+}, [serachName,companys]);
 
   return (
     <>
       <div className="content">
       <Navbar className='px-4' color="dark" light expand="md">
-            <NavbarBrand href="/">Placement Management System</NavbarBrand>
+      <div className="rounded w-full mx-2">
+                  <input type="text" 
+                    placeholder="Search the companys..."
+                    className="w-full px-3 py-1 "
+                    onChange={(e)=>setSearchName(e.target.value)}
+                   />
+                   </div>
             <Nav className="ms-auto" navbar></Nav>
             <NavItem>
               <a href="/admin/add-company">
@@ -47,7 +64,7 @@ function TablesCom() {
                  
                   <tbody>
 
-                  { companys?.map((company , index) =>(
+                  { filterC?.map((company , index) =>(
                     <tr key={index}>
                       <td>{company?.name}</td>
                       <td>{company?.address}</td>

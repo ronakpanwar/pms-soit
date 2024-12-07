@@ -40,7 +40,7 @@ function CompanyProfile(props) {
 
               <CardBody>
                 <Form>
-                  <Row className="m-2">
+                  <Row className="mx-2">
                     <Col className="pr-1" md="6">
                       <FormGroup>
                         <label>Company Name</label>
@@ -57,14 +57,14 @@ function CompanyProfile(props) {
                   </Row>
 
                   <Row>
-                    <Col md="12" className="m-4">
+                    <Col md="12" className="mx-4">
                       <FormGroup>
                         <label>Address</label>
                         <p>{company?.address}</p>
                       </FormGroup>
                     </Col>
                   </Row>
-                  <Row className="m-2">
+                  <Row className="mx-2">
                     <Col className="pr-1 " md="6">
                       <FormGroup>
                         <label>About</label>
